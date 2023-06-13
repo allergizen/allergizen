@@ -1,5 +1,12 @@
 import React from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import {
+   KeyboardAvoidingView,
+   StyleSheet,
+   Text,
+   View,
+   TextInput,
+   TouchableOpacity,
+} from 'react-native';
 
 const Login = () => {
    return (
@@ -8,12 +15,26 @@ const Login = () => {
             <TextInput placeholder="Email" style={styles.input} />
             <TextInput placeholder="Password" style={styles.input} secureTextEntry />
          </View>
+
          <View style={styles.buttonContainer}>
-            <touchableOpacity onPress={() => {}} style={styles.button}>
+            <TouchableOpacity onPress={() => {}} style={styles.button}>
+               <Text style={styles.buttonText}>Forgot password?</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {}} style={styles.button}>
                <Text style={styles.buttonText}>Login</Text>
-            </touchableOpacity>
+            </TouchableOpacity>
+
+            <Text style={styles.or}>OR</Text>
+            <TouchableOpacity onPress={() => {}} style={styles.button}>
+               <Text style={styles.buttonText}>Login with google</Text>
+            </TouchableOpacity>
+
+            <Text>New here?</Text>
+            <TouchableOpacity onPress={() => {}} style={styles.button}>
+               <Text style={styles.buttonText}>Register</Text>
+            </TouchableOpacity>
          </View>
-         <Text>Login</Text>
       </KeyboardAvoidingView>
    );
 };

@@ -34,6 +34,7 @@ export default function App() {
                <Tab.Screen name="Home" component={Home} options={tabOptions.home} />
                <Tab.Screen name="Scan" component={Scan} options={tabOptions.scan} />
                <Tab.Screen name="Search" component={Search} options={tabOptions.search} />
+               <Tab.Screen name="Login" component={Login} options={tabOptions.search} />
             </Tab.Navigator>
          </View>
       </NavigationContainer>
