@@ -1,14 +1,29 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import Globals from '../assets/Globals.js';
 
 const Home = () => {
    return (
-      <View>
-         <Text>Home</Text>
+      <View style={{ flex: 1 }}>
+         <View style={styles.welcomeView}>
+            <Text style={styles.welcomeText}>Bentornato!</Text>
+         </View>
+         <View style={styles.productArea}></View>
       </View>
    );
 };
 
-export default Home;
+const styles = StyleSheet.create({
+   screen: { flex: 1, flexDirection: 'column' },
+   welcomeView: {
+      backgroundColor: '#0d4',
+      flex: 3,
+      justifyContent: 'center',
+      paddingHorizontal: Globals.HorizontalPaddingView,
+   },
+   productArea: { backgroundColor: 'red', flex: 10 },
 
-const styles = StyleSheet.create({});
+   welcomeText: { fontSize: 50 },
+});
+
+export default Home;
