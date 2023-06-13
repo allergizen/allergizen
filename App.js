@@ -34,7 +34,7 @@ export default function App() {
                <Tab.Screen name="Home" component={Home} options={tabOptions.home} />
                <Tab.Screen name="Scan" component={Scan} options={tabOptions.scan} />
                <Tab.Screen name="Search" component={Search} options={tabOptions.search} />
-               <Tab.Screen name="Login" component={Login} options={tabOptions.search} />
+               <Tab.Screen name="Login" component={Login} options={tabOptions.loginPage} />
             </Tab.Navigator>
          </View>
       </NavigationContainer>
@@ -71,8 +71,8 @@ const tabOptions = {
          <MaterialCommunityIcons name="barcode-scan" color={color} size={26} />
       ),
    },
-   login: {
+   loginPage: {
       tabBarLabel: 'Login',
-      tabBarIcon: ({ color }) => <MaterialCommunityIcons name="login" color={color} size={26} />,
+      tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account" color={color} size={26} />,
    },
 };
