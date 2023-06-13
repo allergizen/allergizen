@@ -1,5 +1,5 @@
 const Globals = {
-   HorizontalPaddingView: 50,
+   css: { HorizontalPaddingView: 20 },
+   theme: 'light',
 };
-
 export default Globals;
