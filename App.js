@@ -24,7 +24,7 @@ const Tab = createMaterialBottomTabNavigator();
 export default function App() {
    return (
       <>
-         <StatusBar animated={true} barStyle={'default'} />
+         <StatusBar animated={true} barStyle="auto" />
          <TabBar />
       </>
    );
