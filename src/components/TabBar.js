@@ -23,8 +23,8 @@ const TabBar = () => {
             <Tab.Navigator
                initialRouteName="Home"
                activeColor={Colors.green}
-               inactiveColor="#000"
-               barStyle={{ backgroundColor: Colors.light }}>
+               inactiveColor="#ccc"
+               barStyle={{ backgroundColor: '#fff' }}>
                <Tab.Screen name="Home" component={Home} options={tabOptions.home} />
                <Tab.Screen name="Search" component={Search} options={tabOptions.search} />
                <Tab.Screen name="Scan" component={Scan} options={tabOptions.scan} />

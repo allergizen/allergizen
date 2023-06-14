@@ -4,16 +4,21 @@ import Globals from '../assets/Globals.js';
 import Colors from '../components/Colors';
 
 const DATA = [
-   { name: 'habeeb', img: '../assets/images/icon.png', code: '123' },
-   { name: 'habeeb', img: '../assets/images/icon.png', code: '133' },
+   { name: 'habeeb', img: '../assets/images/icon.png', code: '001' },
+   { name: 'nero', img: '../assets/images/icon.png', code: '002' },
+   { name: 'nero', img: '../assets/images/icon.png', code: '003' },
+   { name: 'nero', img: '../assets/images/icon.png', code: '004' },
 ];
-const renderItem = (item) => {
+const renderItem = ({ item }) => {
    return (
-      <View style={{ width: 100, height: 50 }}>
+      <View style={styles.lastSaveCardStyle}>
          <View>
-            <Text>{item.name}</Text>
+            <Text style={{ color: 'red' }}>{item.name}</Text>
+            <Image
+               source={require('../assets/images/adaptive-icon.png')}
+               style={{ height: 50, width: 50 }}
+            />
          </View>
-         {/* <Image source={require('../assets/images/adaptive-icon.png')} /> */}
       </View>
    );
 };
@@ -61,6 +66,15 @@ const styles = StyleSheet.create({
    },
    title: { fontSize: 40 },
    h1: { fontSize: 20, flex: 1 },
+   lastSaveCardStyle: {
+      width: 150,
+      flex: 1,
+      flexDirection: 'column',
+      margin: 5,
+      borderRadius: 10,
+      padding: 5,
+      backgroundColor: 'yellow',
+   },
 });
 
 export default Home;
