@@ -29,11 +29,7 @@ export default function App() {
 
    return (
       <>
-<<<<<<< HEAD
-         <StatusBar animated={true} barStyle="auto" />
-=======
          <StatusBar animated={false} style={'auto'} />
->>>>>>> cfb364f (Animazione scansione codice a barre)
          <TabBar />
       </>
    );

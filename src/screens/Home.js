@@ -1,9 +1,6 @@
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
-<<<<<<< HEAD
-import React from 'react';
 
-=======
->>>>>>> cfb364f (Animazione scansione codice a barre)
+import React from 'react';
 import Globals from '../assets/Globals.js';
 import Colors from '../components/Colors';
 
