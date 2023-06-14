@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
-import React from 'react';
 
+import React from 'react';
 import Globals from '../assets/Globals.js';
 import Colors from '../components/Colors';
 
