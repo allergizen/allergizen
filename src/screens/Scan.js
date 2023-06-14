@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, Button, Animated } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner'
-import { Camera } from 'expo-camera';
+import { Camera, CameraType } from 'expo-camera';
 import api from '../api/api.js';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -71,6 +71,7 @@ export default function App() {
                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                ratio='16:9'
                style={StyleSheet.absoluteFillObject}
+               type={CameraType.back}
                barCodeTypes={[
                   BarCodeScanner.Constants.BarCodeType.ean13,
                   BarCodeScanner.Constants.BarCodeType.ean8
@@ -79,17 +80,19 @@ export default function App() {
             />
          : null}
 
-         <Text style={{color: 'white', fontWeight: 'bold', marginBottom: 15}}>INQUADRA UN CODICE A BARRE</Text>
-         <View style={styles.rectangle}>
-            <ScanBorder style={styles.svgTopLeft}></ScanBorder>
-            <ScanBorder style={styles.svgTopRight}></ScanBorder>
-            <ScanBorder style={styles.svgBottomRight}></ScanBorder>
-            <ScanBorder style={styles.svgBottomLeft}></ScanBorder>
-            <Animatable.View style={scanned ? styles.bar : {visibility: 'hidden'}} animation={scanned? scan : null} duration={2000} iterationCount="infinite">
-            </Animatable.View>
-         </View>
+         <Animatable.View animation={scanned ? backgroundScan : null} duration={500} style={scanned ? {transition: 'all .2s ease', backgroundColor: '#00000999', height: '100%', width: '100%', flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center'} : {backgroundColor: '#00000000', height: '100%', width: '100%', flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center', transition: 'all .2s ease'}}>
+            {scanned && <Text style={{color: 'white', fontWeight: 'bold', marginBottom: 15}}>INQUADRA UN CODICE A BARRE</Text>}  
+            <View style={styles.rectangle}>
+               <ScanBorder style={styles.svgTopLeft}></ScanBorder>
+               <ScanBorder style={styles.svgTopRight}></ScanBorder>
+               <ScanBorder style={styles.svgBottomRight}></ScanBorder>
+               <ScanBorder style={styles.svgBottomLeft}></ScanBorder>
+               <Animatable.View style={scanned ? styles.bar : {visibility: 'hidden'}} animation={scanned? scan : null} duration={2000} iterationCount="infinite">
+               </Animatable.View>
+            </View>
+            {scanned && <Button title={'Tap to Scan Again'} onPress={() => {setScanned(false); cameraRef.current.resumePreview()}} />}
+         </Animatable.View>
 
-         {scanned && <Button title={'Tap to Scan Again'} onPress={() => {setScanned(false); cameraRef.current.resumePreview()}} />}
       </View>
    );
 }
@@ -156,3 +159,12 @@ const scan = {
       left: 10,
    }
 };
+
+const backgroundScan = {
+   0: {
+      backgroundColor: '#00000000'
+   },
+   1: {
+      backgroundColor: '#00000999'
+   }
+}
