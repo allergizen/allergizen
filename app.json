@@ -1,29 +1,36 @@
 {
-   "expo": {
-      "name": "stage",
-      "slug": "AwesomeProject",
-      "version": "1.0.0",
-      "orientation": "portrait",
-      "icon": "./src/assets/images/icon.png",
-      "userInterfaceStyle": "light",
-
-      "splash": {
-         "image": "./src/assets/images/splash.png",
-         "resizeMode": "contain",
-         "backgroundColor": "#ffffff"
+  "expo": {
+    "name": "stage",
+    "slug": "AwesomeProject",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./src/assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       },
-      "assetBundlePatterns": ["**/*"],
-      "ios": {
-         "supportsTablet": true
-      },
-      "android": {
-         "adaptiveIcon": {
-            "foregroundImage": "./src/assets/images/adaptive-icon.png",
-            "backgroundColor": "#ffffff"
-         }
-      },
-      "web": {
-         "favicon": "./src/assets/images/favicon.png"
+      "package": "stage.v1_0_0"
+    },
+    "web": {
+      "favicon": "./src/assets/images/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c4372627-d74c-482f-a6ec-bcd1542dc431"
       }
-   }
+    }
+  }
 }
