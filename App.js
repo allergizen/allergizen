@@ -4,7 +4,7 @@ import {
    SafeAreaView,
    TouchableWithoutFeedback,
    Platform,
-   StatusBar,
+   // StatusBar,
    View,
 } from 'react-native';
 import Colors from './src/components/Colors';
@@ -19,12 +19,17 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { NavigationContainer } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import * as NavigationBar from 'expo-navigation-bar';
+import { StatusBar } from 'expo-status-bar';
+
 const Tab = createMaterialBottomTabNavigator();
 
 export default function App() {
+   NavigationBar.setBackgroundColorAsync("white");
+
    return (
       <>
-         <StatusBar animated={true} barStyle="auto" />
+         <StatusBar animated={false} style={'auto'} />
          <TabBar />
       </>
    );
