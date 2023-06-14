@@ -77,7 +77,7 @@ const Home = () => {
    return (
       <View style={styles.screen}>
          <View style={styles.welcomeView}>
-            <Text style={styles.title}>Bentornato!</Text>
+            <Text style={[styles.title, styles.colorGreen]}>Bentornato!</Text>
          </View>
          <View style={styles.productArea}>
             <View
@@ -86,7 +86,7 @@ const Home = () => {
                   flexDirection: 'column',
                   paddingHorizontal: Globals.css.HorizontalPaddingView,
                }}>
-               <Text style={styles.h1}>Ultimi Salvati</Text>
+               <Text style={[styles.h1, styles.colorGreen]}>Ultimi Salvati</Text>
                <View style={{ flex: 4 }}>
                   <FlatList
                      horizontal={true}
@@ -102,7 +102,7 @@ const Home = () => {
                   flexDirection: 'column',
                   paddingHorizontal: Globals.css.HorizontalPaddingView,
                }}>
-               <Text style={styles.h1}>Cronologia</Text>
+               <Text style={[styles.h1, styles.colorGreen]}>Cronologia</Text>
                <View style={{ flex: 8 }}>
                   <FlatList
                      horizontal={false}
@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       backgroundColor: Colors.light,
    },
+   colorGreen: { color: Colors.green },
 });
 
 export default Home;
