@@ -6,7 +6,7 @@ const Colors = {
    red: '#ed6160',
    lightGreen: '#dfebcb',
    green: '#8cc36a',
-   background: Globals.theme === 'light' ? ' #fff' : '#000',
+   background: '#f2f2f2',
 };
 
 export default Colors;
