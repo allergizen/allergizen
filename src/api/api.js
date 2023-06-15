@@ -12,10 +12,7 @@ export default api = {
 
    from_name: (name, page = 1) => {
       return new Promise((resolve, reject) => {
-         fetch(
-            api.API_ENDPOINT +
-               `cgi/search.pl?action=process&json=true&page=${page}&search_terms=${name}`,
-         )
+         fetch(api.API_ENDPOINT + `cgi/search.pl?action=process&json=true&page=${page}&search_terms=${name}`)
             .then((res) => res.json())
             .then(resolve)
             .catch(reject);

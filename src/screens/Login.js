@@ -8,10 +8,10 @@ import {
    TouchableOpacity,
 } from 'react-native';
 
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-
+import { getAuth, signInWithEmailAndPassword, signInWithCustomToken, getIdToken} from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { KEY, AD, PRID, STBU, MSI, AI } from 'detona';
 
@@ -26,18 +26,52 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth();
+auth.languageCode = 'it';
 
+/*async function checkLoginIn(){ 
+   console.log('checking login');
+   await AsyncStorage.getItem("TOKEN").then((value) => {
+      console.log(value);
+      if (value != null){
+         console.log('logged');
+         signInWithCustomToken(auth, value)
+            .then((userCredential) => {
+               const user = userCredential.user;
+               console.log('Resumed: ', user.email);
+            })
+            .catch((error) => {
+               const errorCode = error.code;
+               const errorMessage = error.message;
+               console.log('error: ', errorCode, errorMessage);
+            });
+      }
+      else
+         console.log('not logged');
+   });
+}*/
+auth.onAuthStateChanged((user) => {
+   if (user) {
+      console.log('logged: ', user.email);
+      try{
+         async function getToken(){
+            await AsyncStorage.setItem("TOKEN", await user.getIdToken());
+         }
+         getToken();
+      }catch{
+
+      }
+   }
+});
+
+//checkLoginIn();
 const Login = () => {
    const [email, setEmail] = React.useState('');
    const [password, setPassword] = React.useState('');
 
    const handleLogin = () => {
-      const auth = getAuth();
       signInWithEmailAndPassword(auth, email, password)
          .then((userCredential) => {
-            // Signed in
-            var user = userCredential.user;
-            console.log('logged: ', user);
          })
          .catch((error) => {
             if (error.code == 'auth/wrong-password' || error.code == 'auth/user-not-found') {
@@ -71,11 +105,6 @@ const Login = () => {
 
             <TouchableOpacity onPress={handleLogin} style={styles.button}>
                <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
-
-            <Text style={styles.text}>or</Text>
-            <TouchableOpacity onPress={() => {}} style={styles.button}>
-               <Text style={styles.buttonText}>Login with google</Text>
             </TouchableOpacity>
 
             <Text style={styles.text}>New here?</Text>
