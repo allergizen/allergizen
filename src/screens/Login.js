@@ -17,7 +17,6 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Globals from "../assets/Globals.js";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import TextInput from 'react-native-textinput-with-icons'
 
 import { KEY, AD, PRID, STBU, MSI, AI } from "@env";
