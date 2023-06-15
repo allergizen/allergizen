@@ -10,6 +10,7 @@ import Search from '../screens/Search';
 import Scan from '../screens/Scan';
 import Favorites from '../screens/Favorites';
 import Login from '../screens/Login';
+import Profile from '../screens/Profile';
 
 const TabBar = () => {
    const Tab = createMaterialBottomTabNavigator();
@@ -80,7 +81,7 @@ const TabBar = () => {
                />
                <Tab.Screen
                   name="Account"
-                  component={Login}
+                  component={Profile}
                   options={{
                      tabBarLabel: 'Account',
                      tabBarIcon: ({ color }) => (
