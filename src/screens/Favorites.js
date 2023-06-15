@@ -3,6 +3,7 @@ import Globals from '../assets/Globals.js';
 import Colors from '../components/Colors';
 
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Image } from 'react-native';
+import Profile from './Profile.js';
 
 const DATA = [
    {
@@ -41,7 +42,7 @@ const Item = ({ title, image, company }) => (
    </View>
 );
 
-const App = () => {
+const Favorites = () => {
    return (
       <View style={styles.screen}>
          <View stylex={styles.savedView}>
@@ -81,6 +82,7 @@ const styles = StyleSheet.create({
       fontSize: 40,
       marginVertical: 50,
       paddingHorizontal: Globals.css.HorizontalPaddingView,
+      fontWeight: 'bold'
    },
 
    h1: { fontSize: 20 },
@@ -108,4 +110,4 @@ const styles = StyleSheet.create({
    },
 });
 
-export default App;
+export default Favorites;

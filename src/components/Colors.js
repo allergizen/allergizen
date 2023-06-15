@@ -7,6 +7,7 @@ const Colors = {
    lightGreen: '#dfebcb',
    green: '#8cc36a',
    background: '#f2f2f2',
+   profileScreenCard: '#e2e2e2',
 };
 
 export default Colors;

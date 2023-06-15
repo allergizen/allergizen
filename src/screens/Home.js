@@ -118,7 +118,10 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
-   screen: { flex: 1, flexDirection: 'column', backgroundColor: Colors.background },
+   screen: { 
+      flex: 1, 
+      flexDirection: 'column' 
+   },
    welcomeView: {
       flex: 2,
       justifyContent: 'center',
@@ -127,18 +130,19 @@ const styles = StyleSheet.create({
    productArea: {
       flex: 10,
    },
-   title: { fontSize: 40 },
+   title: { fontSize: 40, fontWeight: 'bold' },
    h1: { fontSize: 20, flex: 1 },
    lastSaveCardStyle: {
       width: 150,
       flex: 1,
       flexDirection: 'column',
       margin: 5,
-      borderRadius: 10,
+      borderRadius: 20,
       padding: 5,
       borderWidth: 1,
       backgroundColor: Colors.light,
    },
+   colorGreen: { color: Colors.green },
 });
 
 export default Home;
