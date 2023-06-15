@@ -7,37 +7,46 @@ import { SearchBar } from 'react-native-elements';
 
 
 
- export default class Search extends React.Component {
+export default class Search extends React.Component {
    state = {
-     search: '',
+      search: '',
    };
- 
+
    updateSearch = (search) => {
-     this.setState({ search });
+      this.setState({ search });
    };
- 
+
    render() {
-     const { search } = this.state;
- 
-     return (
-      <View style={styles.screen}>
-      <View stylex={styles.SearchView}>
-         <Text style={styles.title}>Cerca</Text>
-      </View>
-      <View style={styles.productArea}>
-         <SearchBar
-            placeholder="Cerca qui..."
-            onChangeText={this.updateSearch}
-            value={search}
-            platform='ios'
-         />
-      </View>
-   </View>
-     );
+      const { search } = this.state;
+
+      return (
+         <View style={styles.screen}>
+            <View stylex={styles.SearchView}>
+               <Text style={styles.title}>Cerca</Text>
+            </View>
+            <View style={styles.productArea}>
+               <SearchBar
+                  placeholder="Cerca qui..."
+                  onChangeText={this.updateSearch}
+                  inputContainerStyle={{ backgroundColor: 'white' }}
+                  leftIconContainerStyle={{ backgroundColor: 'white' }}
+                  inputStyle={{ backgroundColor: 'white' }}
+                  containerStyle={{
+                     backgroundColor: 'white',
+                     justifyContent: 'space-around',
+                     borderTopWidth: 0,
+                     borderBottomWidth: 0,
+                  }}
+                  value={search}
+                  platform='default'
+               />
+            </View>
+         </View>
+      );
    }
- }
- 
- 
+}
+
+
 
 const styles = StyleSheet.create({
    screen: {
