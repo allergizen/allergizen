@@ -13,8 +13,33 @@ import React from 'react';
 import Colors from '../components/Colors';
 import Globals from '../assets/Globals';
 import ProfileLinkScreenCard from '../components/ProfileLinkScreenCard';
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDoc, doc } from "firebase/firestore/lite";
+import { KEY, AD, PRID, STBU, MSI, AI, _UID } from "@env";
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+const firebaseConfig = {
+   apiKey: KEY,
+   authDomain: AD,
+   projectId: PRID,
+   storageBucket: STBU,
+   messagingSenderId: MSI,
+   appId: AI,
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const uid = _UID;
 
 const Profile = () => {
+   var [name, setName] = React.useState("nome");
+   var [email, setEmail] = React.useState("email@example.it");
+   async function getInfo() {
+      var query = await getDoc(doc(db, "users", uid));
+      setName(query.data().nome);
+      setEmail(query.data().email);
+   }
+   getInfo();
+   
    return (
       <SafeAreaView style={styles.screen}>
          <View style={styles.profile}>
@@ -30,8 +55,8 @@ const Profile = () => {
                         height: '100%',
                         paddingTop: 5,
                      }}>
-                     <Text style={[styles.h1]}>Nicola Preda</Text>
-                     <Text style={[styles.text]}>nicola.preda05@gmail.com</Text>
+                     <Text style={[styles.h1]}>{name}</Text>
+                     <Text style={[styles.text]}>{email}</Text>
                      <TouchableOpacity style={styles.buttonStyle}>
                         <Text style={{ fontWeight: 500 }}>Modifica</Text>
                      </TouchableOpacity>
@@ -47,12 +72,11 @@ const Profile = () => {
                      nameScreen="Informazioni"
                   />
                   <ProfileLinkScreenCard iconName={'help-circle-outline'} nameScreen="Aiuto" />
+                  <ProfileLinkScreenCard iconName={'logout'} nameScreen="Logout" />
+
                </ScrollView>
             </View>
 
-            <TouchableOpacity style={styles.logoutStyle}>
-               <Text style={styles.logoutTextStyle}>Logout</Text>
-            </TouchableOpacity>
          </View>
       </SafeAreaView>
    );
@@ -62,13 +86,11 @@ const styles = StyleSheet.create({
    screen: {
       flex: 1,
       flexDirection: 'column',
-      backgroundColor: Colors.background,
-      paddingHorizontal: Globals.css.HorizontalPaddingView + 10,
-      paddingVertical: Globals.css.VerticalPaddingView + 10,
-      paddingBottom: Globals.css.VerticalPaddingView + 50,
+
    },
    profile: {
       justifyContent: 'flex-end',
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
       flex: 1,
    },
 
@@ -86,7 +108,11 @@ const styles = StyleSheet.create({
    productArea: {
       flex: 10,
    },
-   title: { fontSize: 35, fontWeight: '700' },
+   title: {
+      fontSize: 40,
+      fontWeight: 'bold',
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
+   },
    h1: { fontSize: 20, fontWeight: '600' },
    text: {},
    buttonStyle: {

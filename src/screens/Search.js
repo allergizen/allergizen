@@ -1,18 +1,68 @@
-import { StyleSheet, Text, View, TextInput } from 'react-native';
 import React from 'react';
+import Globals from '../assets/Globals.js';
+import Colors from '../components/Colors';
 
-const Search = () => {
-   return (
-      <>
-         <TextInput
-            style={{ height: 45, width: '95%', borderColor: 'gray', borderWidth: 2 }}
-            placeholder="Search"
-            underlineColorAndroid="transparent"
+import { View, StyleSheet, Text, Image } from 'react-native';
+import { SearchBar } from 'react-native-elements';
+
+
+
+ export default class Search extends React.Component {
+   state = {
+     search: '',
+   };
+ 
+   updateSearch = (search) => {
+     this.setState({ search });
+   };
+ 
+   render() {
+     const { search } = this.state;
+ 
+     return (
+      <View style={styles.screen}>
+      <View stylex={styles.SearchView}>
+         <Text style={styles.title}>Cerca</Text>
+      </View>
+      <View style={styles.productArea}>
+         <SearchBar
+            placeholder="Cerca qui..."
+            onChangeText={this.updateSearch}
+            value={search}
+            platform='ios'
          />
-      </>
-   );
-};
+      </View>
+   </View>
+     );
+   }
+ }
+ 
+ 
 
-export default Search;
+const styles = StyleSheet.create({
+   screen: {
+      flex: 1,
+      flexDirection: 'column',
+   },
+   SearchView: {
+      backgroundColor: Colors.background,
+      flex: 2,
+      flexDirection: 'column',
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
+   },
+   productArea: {
+      backgroundColor: Colors.background,
+      flex: 10,
+      marginTop: -45,
+   },
+   title: {
+      fontSize: 40,
+      marginVertical: 50,
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
+      fontWeight: 'bold'
+   },
 
-const styles = StyleSheet.create({});
+   h1: { fontSize: 20 },
+
+
+});

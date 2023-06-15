@@ -118,7 +118,10 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
-   screen: { flex: 1, flexDirection: 'column', backgroundColor: Colors.background },
+   screen: { 
+      flex: 1, 
+      flexDirection: 'column' 
+   },
    welcomeView: {
       flex: 2,
       justifyContent: 'center',
@@ -127,7 +130,7 @@ const styles = StyleSheet.create({
    productArea: {
       flex: 10,
    },
-   title: { fontSize: 40 },
+   title: { fontSize: 40, fontWeight: 'bold' },
    h1: { fontSize: 20, flex: 1 },
    lastSaveCardStyle: {
       width: 150,
