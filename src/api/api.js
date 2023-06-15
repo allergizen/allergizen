@@ -18,6 +18,45 @@ export default api = {
             .catch(reject);
       });
    },
+
+   translate_allergens: (allergens) => {
+      allergens = allergens.split(',')
+
+      const allergenTable = {
+         'en:lupin': 'Lupini',
+         'en:peanuts': 'Arachidi',
+         'en:sulphur-dioxide-and-sulphites': 'Anidride solforosa e solfiti',
+         'en:milk': 'Latte',
+         'en:crustaceans': 'Crostacei',
+         'en:molluscs': 'Molluschi',
+         'en:eggs': 'Uova',
+         'en:gluten': 'Glutine',
+         'en:soybeans': 'Soia',
+         'en:fish': 'Pesce',
+         'en:mustard': 'Senape',
+         'en:sesame-seeds': 'Semi di sesamo',
+         'en:celery': 'Sedano',
+         'en:nuts':'Frutta a guscio'
+      }
+
+      const res = []
+
+      for (let allergen of allergens)
+         if (allergenTable.hasOwnProperty(allergen))
+            res.push(allergenTable[allergen])
+
+      return res
+   },
+
+   get_allergens: (allergens) => {
+      allergens = allergens.split(',')
+
+      const userAllergens = [
+         'en:celery'
+      ]
+
+      return api.translate_allergens(allergens.filter(el => userAllergens.includes(el)).join(','))
+   }
 };
 
 /*
