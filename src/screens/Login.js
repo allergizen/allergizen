@@ -18,7 +18,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { KEY, AD, PRID, STBU, MSI, AI } from 'detona';
+import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
 
 const firebaseConfig = {
   apiKey: KEY,
