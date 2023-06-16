@@ -156,6 +156,12 @@ export default function App() {
       api.from_barcode(data)
          .then((res) => {
             // alert(`Bar code with type ${type} and data ${data} has been scanned!\n${dati}`);
+            const item = {
+               product_name: res.product.product_name,
+               img: res.product.image_front_url,
+               code: res.code,
+            };
+            console.log(item);
             if (res.status === 0) {
                setScanned(false);
                cameraRef.current.resumePreview();
@@ -163,9 +169,7 @@ export default function App() {
                return;
             }
 
-            setItem(
-               "[{name: 'Nutella',img: 'https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.427.400.jpg',code: '001'}]",
-            );
+            setItem(JSON.stringify([item]));
 
             setDati(res);
             setSnapAnim({ 0: { top: screenHeight }, 1: { top: 0.1 * screenHeight } });

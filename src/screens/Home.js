@@ -111,9 +111,10 @@ const Home = () => {
       // Funzione che viene chiamata quando il valore di scanned cambia
       const handleScannedChange = (newValue) => {
          setTimeout(() => {
-            const data = getItem().then((res) => {
-               console.log(JSON.parse(res));
-               setProduct(JSON.parse(res));
+            getItem().then((res) => {
+               const data = JSON.parse(res.toString());
+               console.log(data);
+               setProduct(data);
             });
          }, 1000);
          console.log(product);

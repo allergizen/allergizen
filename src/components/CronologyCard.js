@@ -20,7 +20,8 @@ const CronologyCard = ({ item }) => {
          </View>
 
          <View style={{ flex: 2, alignSelf: 'center' }}>
-            <Text style={{ flex: 5, alignSelf: 'center', fontSize: 16 }}>{item.name}</Text>
+            <Text style={{ flex: 5, alignSelf: 'center', fontSize: 16 }}>{item.product_name}</Text>
+            <Text style={{ flex: 5, alignSelf: 'center', fontSize: 16 }}>{item.code}</Text>
          </View>
       </View>
    );

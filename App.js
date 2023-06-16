@@ -13,7 +13,7 @@ import TabBar from './src/components/TabBar';
 const Stack = createStackNavigator();
 
 export default function App() {
-   const [userToken, setUserToken] = React.useState('asdkjaskdjb');
+   const [userToken, setUserToken] = React.useState('asduiahduiw');
 
    // React.useEffect(() => {
    //   // Verifica se l'utente è già autenticato e imposta il token
