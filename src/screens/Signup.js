@@ -19,6 +19,7 @@ import {
 import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
 import TextInput from 'react-native-textinput-with-icons';
 import Globals from '../assets/Globals.js';
+import Colors from '../components/Colors.js';
 
 const firebaseConfig = {
   apiKey: KEY,

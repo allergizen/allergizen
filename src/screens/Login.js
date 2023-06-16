@@ -18,6 +18,7 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Globals from '../assets/Globals.js';
 import TextInput from 'react-native-textinput-with-icons';
+import Colors from '../components/Colors.js';
 
 import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
 
@@ -91,6 +92,10 @@ const Login = ({ navigation }) => {
     navigation.navigate('Signup');
   };
 
+  const handleForgotPasspButtonNavigation = () => {
+    navigation.navigate('ForgotPassword');
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior='padding'>
       <View style={styles.loginView}>
@@ -112,7 +117,12 @@ const Login = ({ navigation }) => {
         />
       </View>
       <TouchableOpacity onPress={() => {}} style={styles.forgotContainer}>
-        <Text style={styles.textAsBtn}>Forgot password?</Text>
+        <Text
+          style={styles.textAsBtn}
+          onPress={handleForgotPasspButtonNavigation}
+        >
+          Forgot password?
+        </Text>
       </TouchableOpacity>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleLogin} style={styles.button}>
