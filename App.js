@@ -5,13 +5,13 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
-import Home from './src/screens/Home';
+import ForgotPassword from './src/screens/ForgotPassword';
 import TabBar from './src/components/TabBar';
 
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [userToken, setUserToken] = React.useState('asdkjaskdjb');
+  const [userToken, setUserToken] = React.useState('asd');
 
   // React.useEffect(() => {
   //   // Verifica se l'utente è già autenticato e imposta il token
@@ -35,6 +35,7 @@ export default function App() {
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Signup' component={Signup} />
           <Stack.Screen name='Home'>{() => <TabBar />}</Stack.Screen>
+          <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
         </Stack.Navigator>
       </NavigationContainer>
       <StatusBar style='auto' />

@@ -61,7 +61,7 @@ const TabBar = () => {
                 />
               </View>
             ),
-            tabBarLabel: null,
+            tabBarLabel: '',
           })}
         />
 
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    top: -15,
+    bottom: Platform.OS === 'ios' ? 0 : -15,
   },
 });
 
