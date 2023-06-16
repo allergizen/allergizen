@@ -13,6 +13,7 @@ import { getFirestore, collection, getDocs, setDoc, doc } from "firebase/firesto
 import { KEY, AD, PRID, STBU, MSI, AI } from "@env";
 import TextInput from "react-native-textinput-with-icons";
 import Globals from "../assets/Globals.js";
+import * as SecureStore from 'expo-secure-store';
 
 const firebaseConfig = {
    apiKey: KEY,
@@ -26,26 +27,30 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+async function setUid(uid){
+   await SecureStore.setItemAsync("uid", uid);
+}
+
 async function adddb(email, name, user) {
    try {
       await setDoc(doc(db, "users", user), {
          nome: name,
          email: email,
          allergie: {
-            glutine: false,
-            crostacei: false,
-            uova: false,
-            pesce: false,
-            arachidi: false,
-            soia: false,
-            latte: false,
-            fruttaaguscio: false,
-            sedano: false,
-            senape: false,
-            sesamo: false,
-            anidridesolforosa: false,
-            lupini: false,
-            molluschi: false
+            Glutine: false,
+            Crostacei: false,
+            Uova: false,
+            Pesce: false,
+            Arachidi: false,
+            Soia: false,
+            Latte: false,
+            Fruttaaguscio: false,
+            Sedano: false,
+            Senape: false,
+            Sesamo: false,
+            Anidridesolforosa: false,
+            Lupini: false,
+            Molluschi: false
          },
       });
    } catch {
@@ -79,6 +84,7 @@ const Signup = ({ navigation }) => {
             // Signed in
             var user = userCredential.user;
             console.log("signed up: ", user.email);
+            setUid(user.uid);
             adddb(email, name, user.uid);
          })
          .catch((error) => {
@@ -93,18 +99,21 @@ const Signup = ({ navigation }) => {
 
          <View style={styles.inputContainer}>
             <TextInput
+               label = "Name"
                leftIcon="person-circle"
                style={styles.input}
                value={name}
                onChangeText={(text) => setName(text)}
             />
             <TextInput
+               label = "Email"
                leftIcon="mail"
                style={styles.input}
                value={email}
                onChangeText={(text) => setEmail(text)}
             />
             <TextInput
+               label = "Password"
                leftIcon="lock-closed"
                style={styles.input}
                secureTextEntry
@@ -112,6 +121,7 @@ const Signup = ({ navigation }) => {
                onChangeText={(password) => setPassword(password)}
             />
             <TextInput
+               label = "Confirm Password"
                leftIcon="lock-closed"
                style={styles.input}
                secureTextEntry

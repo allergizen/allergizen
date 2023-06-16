@@ -7,6 +7,7 @@ import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import Home from './src/screens/Home';
 import TabBar from './src/components/TabBar';
+import * as SecureStore from 'expo-secure-store';
 
 const Stack = createStackNavigator();
 

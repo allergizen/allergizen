@@ -4,12 +4,15 @@ import {
    StyleSheet,
    SafeAreaView,
    Image,
-   Button,
    TouchableOpacity,
    FlatList,
    ScrollView,
 } from 'react-native';
 import React from 'react';
+
+import { IconButton } from "@react-native-material/core";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import Dialog from "react-native-dialog";
 
 import Colors from '../components/Colors';
 import Globals from '../assets/Globals';
@@ -33,7 +36,28 @@ const uid = _UID;
 var readed = false;
 var DATA = [];
 
+
+
 const Profile = () => {
+
+   const addAllergia = async (allergia) => {
+      await setDoc(doc(db, "users", uid), {
+         allergie: {
+            [allergia]: true
+         }
+      }, { merge: true });
+      
+   }
+   
+   const removeAllergia = async (allergia) => {
+      await setDoc(doc(db, "users", uid), {
+         allergie: {
+            [allergia]: false
+         }
+      }, { merge: true });
+   }
+
+   
    var [name, setName] = React.useState("nome");
    var [email, setEmail] = React.useState("email@example.it");
    async function getInfo() {
@@ -44,40 +68,75 @@ const Profile = () => {
       setName(query.data().nome);
       setEmail(query.data().email);
       Object.keys(query.data().allergie).forEach((key) => {
+         if (key == "Anidridesolforosa")
+            key = "Anidride solforosa";
+         if (key == "Fruttaaguscio")
+            key = "Frutta a guscio";
          DATA.push({ allergia: key, state: query.data().allergie[key] });
       });
    }
 
    const Item = ({ name, state }) => (
-     //crea una card con il nome a sinistra e il bottone a destra
-       <View style={styles.card}>
-            <View style={{ flexDirection: 'row' }}>
-               <View style={{ flex: 1 }}>
-                  <Text style={styles.cardTitle}>{name}</Text>
-               </View>
-               <View style={{ flex: 3 }}>
-                  <TouchableOpacity style={state ? styles.buttonStyle : styles.buttonStyle2}>
-                     <Text style={{ fontWeight: 500 }}>{state ? "Aggiungi" : "Rimuovi"}</Text>
-                  </TouchableOpacity>
-               </View>
+      //crea una card con il nome a sinistra e il bottone a destra
+      <View style={styles.card}>
+         <View style={{ flexDirection: 'row', flex: "row" }}>
+            <View style={{ flex: 3 }}>
+               <Text style={styles.cardTitle}>{name}</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+                  {state ? 
+                  (<IconButton
+                     icon={props => <Icon name="close" {...props} />}
+                     color="red" onPress={() => {
+                        //removeAllergia(name);
+                     }}
+                  />) :(<IconButton
+                     icon={props => <Icon name="plus" {...props} />}
+                     color="green" onPress={() => {
+                        //addAllergia(name);
+                     }}
+                  />) }
             </View>
          </View>
+      </View>
    );
+   const [visible, setVisible] = React.useState(false);
 
-   if(!readed){
+   const showDialog = () => {
+      setVisible(true);
+   };
+  
+   const handleCancel = () => {
+      setVisible(false);
+   };
+   const confirmChanges = () => {
+      setVisible(false);
+   };
+
+   if (!readed) {
       getInfo();
       var interval = setInterval(() => {
-         if(readed){
+         if (readed) {
             clearInterval(interval);
          }
       }, 100);
    }
-
+   //<Dialog.input label="Nome"></Dialog.input>
+   //<Dialog.input label="Email"></Dialog.input>
    return (
       <SafeAreaView style={styles.screen}>
+
+         <Dialog.Container visible={visible}>
+            <Dialog.Title>Modifica account</Dialog.Title>
+
+            <Dialog.Button label="Annulla" onPress={handleCancel}/>
+            <Dialog.Button label="Conferma" onPress={confirmChanges}/>
+         </Dialog.Container>
+
          <View style={styles.profile}>
             <Text style={styles.title}>Profile</Text>
          </View>
+         
          <View style={{ flex: 10, marginTop: 30 }}>
             <View style={styles.info}>
                <View style={styles.infoView}>
@@ -91,22 +150,20 @@ const Profile = () => {
                      <Text style={[styles.h1]}>{name}</Text>
                      <Text style={[styles.text]}>{email}</Text>
                      <TouchableOpacity style={styles.buttonStyle}>
-                        <Text style={{ fontWeight: 500 }}>Modifica</Text>
+                        <Text style={{ fontWeight: 500 }} onPress={showDialog}>Modifica</Text>
                      </TouchableOpacity>
                   </View>
                </View>
             </View>
-            <View style={styles.screenLink}> 
-            <Text style={styles.subtitle}>Allergeni</Text>
-                       
-            <SafeAreaView style={{marginTop: 10}}>
-            <FlatList
-                  data={DATA}
-                  renderItem={({ item }) => (
-                     <Item name={item.allergia} state={item.state}/>
-                  )}
-               />
-            </SafeAreaView>
+            <View style={styles.screenLink}>
+               <Text style={styles.subtitle}>Allergeni</Text>
+
+                  <FlatList
+                     data={DATA}
+                     renderItem={({ item }) => (
+                        <Item name={item.allergia} state={item.state} />
+                     )}
+                  />
             </View>
 
          </View>
@@ -131,7 +188,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: Globals.css.HorizontalPaddingView / 2,
       flex: 2,
    },
-   
+
    infoView: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -147,7 +204,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: Globals.css.HorizontalPaddingView,
    },
    subtitle: {
-      fontSize: 20,
+      fontSize: 25,
       fontWeight: 'semibold',
       paddingHorizontal: Globals.css.HorizontalPaddingView,
    },
@@ -190,8 +247,9 @@ const styles = StyleSheet.create({
       flex: 1,
    },
    cardTitle: {
-      fontSize: 15,
-      fontWeight: 'bold',
+      alignContent: 'center',
+      fontSize: 25,
+      fontWeight: 'normal',
    },
 });
 

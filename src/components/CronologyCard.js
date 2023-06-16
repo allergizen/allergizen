@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { React, useState } from 'react';
+import { IconButton } from "@react-native-material/core";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 import Colors from './Colors';
-
 const CronologyCard = ({ item }) => {
    fetch(item.img).then((res) => res.blob().then());
    return (
@@ -19,8 +20,22 @@ const CronologyCard = ({ item }) => {
             <ImageBackground source={{ uri: item.img }} style={styles.imageBackground} />
          </View>
 
-         <View style={{ flex: 2, alignSelf: 'center' }}>
-            <Text style={{ flex: 5, alignSelf: 'center', fontSize: 16 }}>{item.name}</Text>
+         <View style={{ flex: 2, alignSelf: 'center', alignContent: 'center', padding: 5}}>
+            <Text style={{ alignSelf: 'center', fontSize: 25 }}>{item.name}</Text>
+            <Text style={{ alignSelf: 'center', fontSize: 17 }}>Kellog's</Text>
+            <View style={{ flexDirection: 'row', flex: "row" }}>
+               <View style={{ flex: 3 }}>
+                  <Text style={{fontSize: 20}}>Allergeni rilevati</Text>
+               </View>
+               <View style={{ flex: 1 }}>
+                  < IconButton
+                     icon={props => <Icon name="plus" {...props} />}
+                     color="green" onPress={() => {
+                        
+                     }}
+                  />               
+               </View>
+            </View>
          </View>
       </View>
    );

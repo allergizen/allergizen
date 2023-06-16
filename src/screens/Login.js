@@ -17,7 +17,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Globals from "../assets/Globals.js";
-import TextInput from 'react-native-textinput-with-icons'
+import TextInput from 'react-native-textinput-with-icons';
+import * as SecureStore from 'expo-secure-store';
 
 import { KEY, AD, PRID, STBU, MSI, AI } from "@env";
 
@@ -56,15 +57,21 @@ auth.languageCode = "it";
          console.log('not logged');
    });
 }*/
+
+async function setUid(uid){
+  await SecureStore.setItemAsync("uid", uid);
+}
+
 auth.onAuthStateChanged((user) => {
   if (user) {
     console.log("logged: ", user.email);
-    try {
+    setUid(user.uid);
+    /*try {
       async function getToken() {
         await AsyncStorage.setItem("TOKEN", await user.getIdToken());
       }
       getToken();
-    } catch {}
+    } catch {}*/
   }
 });
 
@@ -103,12 +110,14 @@ const Login = ({navigation}) => {
       <View style={styles.inputContainer}>
         <TextInput
           leftIcon="mail"
+          label="Email"
           style={styles.input}
           value={email}
           onChangeText={(text) => setEmail(text)}
         />
         <TextInput
           leftIcon="lock-closed"
+          label="Password"
           style={styles.input}
           secureTextEntry
           value={password}
