@@ -103,7 +103,7 @@ const CRONOLOGY = [
 ];
 
 const Home = () => {
-   const [product, setProduct] = useState('');
+   const [product, setProduct] = useState({});
    const { scanned } = useContext(ScanContext);
    // const scanned = '';
 
@@ -111,8 +111,12 @@ const Home = () => {
       // Funzione che viene chiamata quando il valore di scanned cambia
       const handleScannedChange = (newValue) => {
          setTimeout(() => {
-            const data = getItem().then((res) => setProduct(res));
+            const data = getItem().then((res) => {
+               console.log(JSON.parse(res));
+               setProduct(JSON.parse(res));
+            });
          }, 1000);
+         console.log(product);
       }; // Sottoscrivi all'evento di cambio di scanned
       if (scanned) {
          handleScannedChange(scanned);

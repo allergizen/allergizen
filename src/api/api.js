@@ -52,7 +52,8 @@ export default api = {
       allergens = allergens.split(',')
 
       const userAllergens = [
-         'en:celery'
+         'en:celery',
+         'en:gluten'
       ]
 
       return api.translate_allergens(allergens.filter(el => userAllergens.includes(el)).join(','))
