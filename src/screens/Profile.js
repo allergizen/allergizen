@@ -6,6 +6,7 @@ import {
    Image,
    Button,
    TouchableOpacity,
+   FlatList,
    ScrollView,
 } from 'react-native';
 import React from 'react';
@@ -29,17 +30,57 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const uid = _UID;
+var readed = false;
+var rendered = false;
 
 const Profile = () => {
    var [name, setName] = React.useState("nome");
    var [email, setEmail] = React.useState("email@example.it");
+   var [DATA, setDATA] = React.useState([]);
    async function getInfo() {
+      if (readed) return;
+      readed = true;
       var query = await getDoc(doc(db, "users", uid));
       setName(query.data().nome);
       setEmail(query.data().email);
+      Object.keys(query.data().allergie).forEach((key) => {
+         setDATA((DATA) => [
+            ...DATA,
+            {
+               allergia: key,
+               state: query.data().allergie[key],
+            },
+         ]);
+      });
+      console.log("AAAAAAAAAAAAAAA");
    }
-   getInfo();
-   
+
+   const Item = ({ allergia, state }) => (
+     //crea una card con il nome a sinistra e il bottone a destra
+       <View style={styles.card}>
+            <View style={{ flexDirection: 'row' }}>
+               <View style={{ flex: 1 }}>
+                  <Text style={styles.cardTitle}>{allergia}</Text>
+               </View>
+               <View style={{ flex: 3 }}>
+                  <TouchableOpacity style={state ? styles.buttonStyle : styles.buttonStyle2}>
+                     <Text style={{ fontWeight: 500 }}>{state ? "Rimuovi" : "Aggiungi"}</Text>
+                  </TouchableOpacity>
+               </View>
+            </View>
+         </View>
+   );
+
+   if(!readed){
+      getInfo();
+      var interval = setInterval(() => {
+         if(readed){
+            clearInterval(interval);
+            console.log("readed");
+         }
+      }, 100);
+   }
+
    return (
       <SafeAreaView style={styles.screen}>
          <View style={styles.profile}>
@@ -63,18 +104,18 @@ const Profile = () => {
                   </View>
                </View>
             </View>
-            <View style={styles.screenLink}>
-               <ScrollView>
-                  <ProfileLinkScreenCard iconName={'virus-outline'} nameScreen="Allergie" />
-                  <ProfileLinkScreenCard iconName={'cog-outline'} nameScreen="Impostazioni" />
-                  <ProfileLinkScreenCard
-                     iconName={'information-outline'}
-                     nameScreen="Informazioni"
-                  />
-                  <ProfileLinkScreenCard iconName={'help-circle-outline'} nameScreen="Aiuto" />
-                  <ProfileLinkScreenCard iconName={'logout'} nameScreen="Logout" />
-
-               </ScrollView>
+            <View style={styles.screenLink}> 
+            <Text style={styles.subtitle}>Allergeni</Text>
+                       
+            <SafeAreaView style={{marginTop: 10}}>
+            <FlatList
+                  data={DATA}
+                  renderItem={({ item }) => (
+                     <Item title={item.allergia}/>
+                  )}
+                  keyExtractor={(item) => item.allergia}
+               />
+            </SafeAreaView>
             </View>
 
          </View>
@@ -99,6 +140,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: Globals.css.HorizontalPaddingView / 2,
       flex: 2,
    },
+   
    infoView: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -111,6 +153,11 @@ const styles = StyleSheet.create({
    title: {
       fontSize: 40,
       fontWeight: 'bold',
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
+   },
+   subtitle: {
+      fontSize: 20,
+      fontWeight: 'semibold',
       paddingHorizontal: Globals.css.HorizontalPaddingView,
    },
    h1: { fontSize: 20, fontWeight: '600' },
@@ -134,7 +181,6 @@ const styles = StyleSheet.create({
       borderColor: '#d3d3d3',
    },
    screenLink: { flex: 8, paddingTop: 30, paddingHorizontal: 10 },
-   screenCard: { height: 60, backgroundColor: Colors.profileScreenCard, borderRadius: 8 },
    logoutStyle: {
       borderRadius: 10,
       backgroundColor: Colors.profileScreenCard,
@@ -143,6 +189,15 @@ const styles = StyleSheet.create({
       alignItems: 'center',
    },
    logoutTextStyle: { fontSize: 18, color: Colors.red },
+
+   card: {
+      backgroundColor: 'white',
+      borderRadius: 15,
+      padding: 20,
+      marginVertical: 8,
+      marginHorizontal: 16,
+      flex: 1,
+   },
 });
 
 export default Profile;

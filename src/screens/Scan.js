@@ -156,6 +156,10 @@ export default function App() {
       cameraRef.current.pausePreview()
       setSnapAnim({0: {top: screenHeight}, 1: {top: 0.3 * screenHeight}})
       
+      console.log(data);
+      //carica data su firebase
+      
+
       api.from_barcode(data).then((res) => {
          // alert(`Bar code with type ${type} and data ${data} has been scanned!\n${dati}`);
          if (res.status === 0) {
