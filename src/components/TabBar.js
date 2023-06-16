@@ -15,7 +15,7 @@ import Search from '../screens/Search';
 import Scan from '../screens/Scan';
 import Favorites from '../screens/Favorites';
 import Login from '../screens/Login';
-import TabBarScreen from './TabBarScreen';
+// import TabBarScreen from './TabBarScreen';
 const TabBar = () => {
   const Tab = createMaterialBottomTabNavigator();
 
