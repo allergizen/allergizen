@@ -15,10 +15,20 @@ import api from '../api/api.js';
 import { useFocusEffect } from '@react-navigation/native';
 
 import * as Animatable from 'react-native-animatable';
-import Svg, { Defs, G, LinearGradient, Path, SvgUri } from 'react-native-svg';
+import Svg, { Path, SvgUri } from "react-native-svg";
 import { Shadow } from 'react-native-shadow-2';
+import { CrossIcon, CheckIcon, QuestionIcon } from '../assets/svgIcons.js'
 
 const AnimatableScrollView = Animatable.createAnimatableComponent(ScrollView);
+
+const nutriColor = {
+   'a': {color: '#219653', text: 'ottima'},
+   'b': {color: '#60AC0E', text: 'buona'},
+   'c': {color: '#C88F01', text: 'media'},
+   'd': {color: '#E07312', text: 'bassa'},
+   'e': {color: '#EB5757', text: 'grave'},
+   'unknown': {color: '#4F4F4F', text: 'non trovata'}
+}
 
 const ScanBorderTopLeft = (props) => (
    <Svg
@@ -48,8 +58,7 @@ const ScanBorderTopRight = (props) => (
    </Svg>
 );
 const NutriscoreA = (props) => {
-   console.log(props);
-   return (
+   return ( 
       <SvgUri
          uri={`https://static.openfoodfacts.org/images/attributes/nutriscore-${props.id}.svg`}
          {...props}></SvgUri>
@@ -95,24 +104,6 @@ const AddIcon = (props) => (
    </Svg>
 );
 
-const CrossIcon = (props) => (
-   <Svg width={25} height={25} fill='#c00' viewBox='0 0 32 32' {...props}>
-      <Path d='M18.8 16l5.5-5.5c.8-.8.8-2 0-2.8-.3-.4-.8-.7-1.3-.7a2 2 0 00-1.4.6L16 13.2l-5.5-5.5c-.8-.8-2.1-.8-2.8 0-.4.3-.7.8-.7 1.4s.2 1 .6 1.4l5.5 5.5-5.5 5.5c-.3.4-.6.9-.6 1.5 0 .5.2 1 .6 1.4.4.4.9.6 1.4.6.5 0 1-.2 1.4-.6l5.5-5.5 5.5 5.5c.8.8 2.1.8 2.8 0 .8-.8.8-2.1 0-2.8L18.8 16z' />
-   </Svg>
-);
-
-const CheckIcon = (props) => (
-   <Svg viewBox='0 0 24 24' width={25} height={25} {...props}>
-      <Path fill='none' stroke='#73d216' strokeLinecap='round' strokeWidth='2' d='M5 12l5 5 9-9' />
-   </Svg>
-);
-
-const QuestionIcon = (props) => (
-   <Svg fill='#edd400' stroke='#edd400' viewBox='-64 0 512 512' width={25} height={25}>
-      <Path d='M202 0C122 0 71 33 30 91c-7 11-5 25 5 33l43 33c11 7 25 6 33-5 26-31 44-49 83-49 31 0 69 20 69 50 0 22-19 34-49 51-35 20-82 44-82 106v10c0 13 11 24 24 24h72c13 0 24-11 24-24v-6c0-43 126-44 126-160C378 66 287 0 202 0zm-10 373a69 69 0 100 139 69 69 0 000-139z' />
-   </Svg>
-);
-
 export default function App() {
    const screenHeight = Dimensions.get('screen').height;
 
@@ -120,10 +111,10 @@ export default function App() {
    const [scanned, setScanned] = useState(false);
    const [dati, setDati] = useState(null);
 
-   const [cameraStatus, setCameraStatus] = useState(false);
-   const [resultY, setResultY] = useState(screenHeight);
-   const [snapAnim, setSnapAnim] = useState(null);
-   const [isFromTop, setIsFromTop] = useState(false);
+   const [cameraStatus, setCameraStatus] = useState(false)
+   const [resultY, setResultY] = useState(screenHeight)
+   const [startPos, setStartPos] = useState(null)
+   const [snapAnim, setSnapAnim] = useState(null)
 
    const cameraRef = useRef();
 
@@ -143,12 +134,8 @@ export default function App() {
 
    const handleBarCodeScanned = ({ type, data }) => {
       setScanned(true);
-      cameraRef.current.pausePreview();
-      setSnapAnim({ 0: { top: screenHeight }, 1: { top: 0.3 * screenHeight } });
-
-      console.log(data);
-      //carica data su firebase
-
+      cameraRef.current.pausePreview()
+      
       api.from_barcode(data).then((res) => {
          // alert(`Bar code with type ${type} and data ${data} has been scanned!\n${dati}`);
          if (res.status === 0) {
@@ -158,12 +145,25 @@ export default function App() {
             return;
          }
 
-         setDati(res);
-      });
+         setDati(res)
+         setSnapAnim({0: {top: screenHeight}, 1: {top: 0.1 * screenHeight}})
+         setResultY(0.1 * screenHeight)
+      })
+      .catch(() => {
+         setScanned(false)
+         cameraRef.current.resumePreview()
+         setSnapAnim(null)
+      })
    };
 
-   const handleDrag = (e) => {
-      let result = e.nativeEvent.pageY / screenHeight;
+   const handleStartDrag = e => {
+      setStartPos(e.nativeEvent.pageY)
+      setSnapAnim(null)
+      return () => true
+   }
+
+   const handleDrag = e => {
+      let result = ((e.nativeEvent.pageY - startPos) / screenHeight) + 0.1
 
       if (result < 0.1) result = 0.1;
       else if (result > 0.7) result = 0.7;
@@ -171,19 +171,15 @@ export default function App() {
       setResultY(result * screenHeight);
    };
 
-   const handleRelease = (e) => {
-      let pos = resultY / screenHeight;
-      let pippo = isFromTop ? 0.2 : 0.6;
+   const handleRelease = e => {
+      let pos = resultY / screenHeight
 
-      if (pos > pippo) {
-         pos = 1;
-         setIsFromTop(false);
+      if (pos > 0.2) {
+         pos = 1
          setScanned(false);
-         setDati(null);
-         cameraRef.current.resumePreview();
+         cameraRef.current.resumePreview()
       } else {
-         pos = 0.1;
-         setIsFromTop(true);
+         pos = 0.1
       }
 
       setSnapAnim({ 0: { top: resultY }, 1: { top: pos * screenHeight } });
@@ -194,7 +190,8 @@ export default function App() {
       const allergeni = api.translate_allergens(allergens);
       const userAllergens = api.get_allergens(allergens);
 
-      if (allergeni.length === 0) return 'Nessuno trovato';
+      if (allergeni.length === 0)
+         return null
 
       return (
          <Text>
@@ -286,105 +283,60 @@ export default function App() {
             </View>
          </Animatable.View>
 
-         <Animatable.View
-            animation={snapAnim}
-            style={[styles.result, { top: resultY }]}
-            duration={500}>
-            <View
-               style={styles.dragHitBox}
-               onStartShouldSetResponder={() => {
-                  setSnapAnim(null);
-                  return () => true;
-               }}
-               onResponderMove={handleDrag}
-               onResponderRelease={handleRelease}>
-               <View style={styles.dragBar}></View>
-            </View>
+         <Animatable.View animation={snapAnim} style={[styles.result, {top: resultY}]} duration={1000} onStartShouldSetResponder={handleStartDrag} onResponderMove={handleDrag} onResponderRelease={handleRelease}>
+            <View style={styles.dragHitBox} ><View style={styles.dragBar}></View></View>
 
-            {dati === null ? (
-               <></>
-            ) : (
-               <>
-                  <View style={styles.product}>
-                     <Image
-                        source={{ uri: dati.product.image_url }}
-                        style={styles.img}
-                        resizeMode='contain'></Image>
-                     <View style={styles.info}>
-                        <Text style={{ fontSize: 40, fontWeight: 'bold', marginBottom: -5 }}>
-                           {dati.product.product_name}
-                        </Text>
-                        <Text style={{ fontSize: 25, color: 'gray' }}>{dati.product.brands}</Text>
-                        <Shadow offset={[4, 10]}>
-                           <View style={styles.resultview}>
-                              {api.get_allergens(dati.product.allergens).length != 0 ? (
-                                 <>
-                                    <CrossIcon></CrossIcon>
-                                    <Text>Allergie rilevate</Text>
-                                 </>
-                              ) : api.get_allergens(dati.product.traces).length === 0 ? (
-                                 <>
-                                    <CheckIcon></CheckIcon>
-                                    <Text>Allergie non rilevate</Text>
-                                 </>
-                              ) : (
-                                 <>
-                                    <QuestionIcon></QuestionIcon>
-                                    <Text>Possibili allergie</Text>
-                                 </>
-                              )}
-                           </View>
-                        </Shadow>
+            {(dati === null)? <></> : <>
+               <View style={styles.product}>
+                  <Image source={{uri: dati.product.image_url}} style={styles.img} resizeMode="contain"></Image>
+                  <View style={styles.info}>
+                     <Text style={{fontSize: 40, fontWeight: 'bold', marginBottom: -5, width: '80%'}} numberOfLines={2}>{dati.product.product_name}</Text>
+                     <Text style={{fontSize: 25, color: 'gray'}}>{dati.product.brands}</Text>
+                     <Shadow offset={[4, 10]}>
+                        <View style={styles.resultview}>
+                           {api.get_allergens(dati.product.allergens).length != 0?
+                           <>
+                              <CrossIcon></CrossIcon>
+                              <Text>Allergie rilevate</Text>
+                           </>
+                           : api.get_allergens(dati.product.traces).length === 0 ?
+                           <>
+                              <CheckIcon></CheckIcon>
+                              <Text>Allergie non rilevate</Text>
+                           </>
+                           :
+                           <>
+                              <QuestionIcon></QuestionIcon>
+                              <Text>Possibili allergie</Text>
+                           </>
+                           }
+                        </View>
+                     </Shadow>
 
-                        <TouchableOpacity
-                           style={styles.savebutton}
-                           onPress={() => alert('Aggiunto ai preferiti!')}>
-                           <AddIcon></AddIcon>
-                           <Text>Aggiungi ai preferiti</Text>
-                        </TouchableOpacity>
-                     </View>
+                     <TouchableOpacity style={styles.savebutton} onPress={() => alert('Aggiunto ai preferiti!')}>
+                        <AddIcon></AddIcon><Text>Aggiungi ai preferiti</Text>
+                     </TouchableOpacity>
                   </View>
-
-                  <Text style={styles.infoHeader}>Allergeni</Text>
-                  <Text style={styles.infoContent}>
-                     {scriviAllergeni(dati.product.allergens, 'red')}
-                  </Text>
-                  <Text style={[styles.infoHeader, { top: 20 }]}>Ingredienti</Text>
-                  <Text style={[styles.infoContent, { top: 20 }]}>
-                     {dati.product.ingredients_text === ''
-                        ? 'Non trovati '
-                        : dati.product.ingredients_text}
-                  </Text>
-                  <Text style={[styles.infoHeader, { top: 40 }]}>Tracce</Text>
-                  <Text style={[styles.infoContent, { top: 40 }]}>
-                     {dati.product.traces === ''
-                        ? 'Niente'
-                        : scriviAllergeni(dati.product.traces, 'gold')}
-                  </Text>
-                  <Text style={[styles.infoHeader, { top: 50 }]}>Punteggio</Text>
-
-                  <View style={styles.nutriScore}>
-                     {/* <Image source={{uri: 'https://static.openfoodfacts.org/images/attributes/nutriscore-'+ dati.product.nutrition_grades === null  +'.svg' }} style={styles.img} resizeMode="contain"></Image> */}
-                     {/* <Image source='https://static.openfoodfacts.org/images/attributes/nutriscore-d.svg' style={[styles.img, {width: 300, height: 100, position: 'relative'}]} resizeMode="contain"></Image> */}
-                     <NutriscoreA
-                        style={{ transform: 'scale(0.7)', top: 15, left: -17 }}
-                        id={
-                           dati.product.nutrition_grades != null
-                              ? dati.product.nutrition_grades
-                              : 'unknown'
-                        }></NutriscoreA>
-                     <View style={styles.nutriScoreInfo}>
-                        <Text style={{ fontSize: 25, color: 'orange', fontWeight: 'bold' }}>
-                           Nutri-Score{' '}
-                           {dati.product.nutrition_grades != null
-                              ? dati.product.nutrition_grades.toUpperCase()
-                              : 'sconosciuto'}
-                        </Text>
-                        <Text>Qualità nutrizionale bassa</Text>
-                     </View>
+               </View>
+               
+               <Text style={styles.infoHeader}>Allergeni</Text>
+               <Text style={styles.infoContent}>{scriviAllergeni(dati.product.allergens, 'red')?? 'Nessun allergeno trovato'}</Text>
+               <Text style={[styles.infoHeader, {top: 20}]}>Ingredienti</Text>
+               <Text style={[styles.infoContent, {top: 20}]} numberOfLines={3}>{dati.product.ingredients_text?? 'Non trovati'}</Text>
+               <Text style={[styles.infoHeader, {top: 40}]}>Tracce</Text>
+               <Text style={[styles.infoContent, {top: 40}]}>{scriviAllergeni(dati.product.traces, 'gold')?? 'Nessuna traccia rilevata'}</Text>
+               <Text style={[styles.infoHeader, {top: 50}]}>Punteggio</Text>
+            
+               <View style={[styles.nutriScore, {backgroundColor: nutriColor[dati.product.nutrition_grades ?? 'unknown'].color + '33'}]}>
+                  {/* <Image source={{uri: 'https://static.openfoodfacts.org/images/attributes/nutriscore-'+ dati.product.nutrition_grades === null  +'.svg' }} style={styles.img} resizeMode="contain"></Image> */}
+                  {/* <Image source='https://static.openfoodfacts.org/images/attributes/nutriscore-d.svg' style={[styles.img, {width: 300, height: 100, position: 'relative'}]} resizeMode="contain"></Image> */}
+                  <NutriscoreA style={{transform: 'scale(0.65)', top: 15, left: -25 }} id={dati.product.nutrition_grades?? 'unknown'}></NutriscoreA>
+                  <View style={styles.nutriScoreInfo}>
+                     <Text style={{fontSize: 25, color: nutriColor[dati.product.nutrition_grades ?? 'unknown'].color, fontWeight: 'bold' }}>Nutri-Score {dati.product.nutrition_grades != null ? dati.product.nutrition_grades.toUpperCase() : '?'}</Text>
+                     <Text>{'Qualità nutrizionale ' + nutriColor[dati.product.nutrition_grades ?? 'unknown'].text}</Text>
                   </View>
-               </>
-            )}
+               </View>
+            </>}
          </Animatable.View>
       </View>
    );
@@ -465,7 +417,7 @@ const styles = StyleSheet.create({
       padding: 10,
       position: 'absolute',
       width: '100%',
-      height: 75,
+      height: 40,
    },
    img: {
       // position: 'absolute',
@@ -516,7 +468,7 @@ const styles = StyleSheet.create({
    infoHeader: {
       fontSize: 30,
       fontWeight: 'bold',
-      left: 15,
+      left: 20
    },
    infoContent: {
       marginHorizontal: 20,
@@ -525,18 +477,27 @@ const styles = StyleSheet.create({
       top: 20,
       left: 15,
       width: '90%',
-      height: 100,
-      backgroundColor: '#FFA50050',
+      height: 100,   
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      gap: -85,
+      gap: -110,
       borderRadius: 10,
       top: 60,
    },
    nutriScoreInfo: {
       alignSelf: 'center',
    },
+   scrollResult: {
+      padding: 10,
+      flex: 1,
+      flexDirection: 'column',
+      position: 'absolute',
+      borderRadius: 20,
+      backgroundColor: 'magenta',
+      flex: 1,
+      backgroundColor: 'white'
+   }
 });
 
 const scan = {
