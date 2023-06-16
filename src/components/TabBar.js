@@ -10,11 +10,11 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Colors from './Colors';
-import Home from '../screens/Home';
 import Search from '../screens/Search';
 import Scan from '../screens/Scan';
 import Favorites from '../screens/Favorites';
 import Profile from '../screens/Profile';
+import Home from '../screens/Home';
 // import TabBarScreen from './TabBarScreen';
 const TabBar = () => {
   const Tab = createMaterialBottomTabNavigator();
