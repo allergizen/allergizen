@@ -31,40 +31,33 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const uid = _UID;
 var readed = false;
-var rendered = false;
+var DATA = [];
 
 const Profile = () => {
    var [name, setName] = React.useState("nome");
    var [email, setEmail] = React.useState("email@example.it");
-   var [DATA, setDATA] = React.useState([]);
    async function getInfo() {
-      if (readed) return;
+      if (readed)
+         return;
       readed = true;
       var query = await getDoc(doc(db, "users", uid));
       setName(query.data().nome);
       setEmail(query.data().email);
       Object.keys(query.data().allergie).forEach((key) => {
-         setDATA((DATA) => [
-            ...DATA,
-            {
-               allergia: key,
-               state: query.data().allergie[key],
-            },
-         ]);
+         DATA.push({ allergia: key, state: query.data().allergie[key] });
       });
-      console.log("AAAAAAAAAAAAAAA");
    }
 
-   const Item = ({ allergia, state }) => (
+   const Item = ({ name, state }) => (
      //crea una card con il nome a sinistra e il bottone a destra
        <View style={styles.card}>
             <View style={{ flexDirection: 'row' }}>
                <View style={{ flex: 1 }}>
-                  <Text style={styles.cardTitle}>{allergia}</Text>
+                  <Text style={styles.cardTitle}>{name}</Text>
                </View>
                <View style={{ flex: 3 }}>
                   <TouchableOpacity style={state ? styles.buttonStyle : styles.buttonStyle2}>
-                     <Text style={{ fontWeight: 500 }}>{state ? "Rimuovi" : "Aggiungi"}</Text>
+                     <Text style={{ fontWeight: 500 }}>{state ? "Aggiungi" : "Rimuovi"}</Text>
                   </TouchableOpacity>
                </View>
             </View>
@@ -76,7 +69,6 @@ const Profile = () => {
       var interval = setInterval(() => {
          if(readed){
             clearInterval(interval);
-            console.log("readed");
          }
       }, 100);
    }
@@ -111,9 +103,8 @@ const Profile = () => {
             <FlatList
                   data={DATA}
                   renderItem={({ item }) => (
-                     <Item title={item.allergia}/>
+                     <Item name={item.allergia} state={item.state}/>
                   )}
-                  keyExtractor={(item) => item.allergia}
                />
             </SafeAreaView>
             </View>
@@ -197,6 +188,10 @@ const styles = StyleSheet.create({
       marginVertical: 8,
       marginHorizontal: 16,
       flex: 1,
+   },
+   cardTitle: {
+      fontSize: 15,
+      fontWeight: 'bold',
    },
 });
 
