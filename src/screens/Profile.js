@@ -8,16 +8,17 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
-} from 'react-native';
-import React from 'react';
+} from "react-native";
+import React from "react";
 
-import Colors from '../components/Colors';
-import Globals from '../assets/Globals';
-import ProfileLinkScreenCard from '../components/ProfileLinkScreenCard';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDoc, doc } from 'firebase/firestore/lite';
-import { KEY, AD, PRID, STBU, MSI, AI, _UID } from '@env';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import Colors from "../components/Colors";
+import Globals from "../assets/Globals";
+import ProfileLinkScreenCard from "../components/ProfileLinkScreenCard";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDoc, doc } from "firebase/firestore/lite";
+import { KEY, AD, PRID, STBU, MSI, AI, _UID } from "@env";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { app } from "./Login";
 const firebaseConfig = {
   apiKey: KEY,
   authDomain: AD,
@@ -27,19 +28,19 @@ const firebaseConfig = {
   appId: AI,
 };
 
-const app = initializeApp(firebaseConfig);
+// const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const uid = _UID;
 var readed = false;
 var DATA = [];
 
 const Profile = () => {
-  var [name, setName] = React.useState('nome');
-  var [email, setEmail] = React.useState('email@example.it');
+  var [name, setName] = React.useState("nome");
+  var [email, setEmail] = React.useState("email@example.it");
   async function getInfo() {
     if (readed) return;
     readed = true;
-    var query = await getDoc(doc(db, 'users', uid));
+    var query = await getDoc(doc(db, "users", uid));
     setName(query.data().nome);
     setEmail(query.data().email);
     Object.keys(query.data().allergie).forEach((key) => {
@@ -50,7 +51,7 @@ const Profile = () => {
   const Item = ({ name, state }) => (
     //crea una card con il nome a sinistra e il bottone a destra
     <View style={styles.card}>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: "row" }}>
         <View style={{ flex: 1 }}>
           <Text style={styles.cardTitle}>{name}</Text>
         </View>
@@ -59,7 +60,7 @@ const Profile = () => {
             style={state ? styles.buttonStyle : styles.buttonStyle2}
           >
             <Text style={{ fontWeight: 500 }}>
-              {state ? 'Aggiungi' : 'Rimuovi'}
+              {state ? "Aggiungi" : "Rimuovi"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -85,13 +86,13 @@ const Profile = () => {
         <View style={styles.info}>
           <View style={styles.infoView}>
             <Image
-              source={require('../assets/images/icon.png')}
+              source={require("../assets/images/icon.png")}
               style={styles.profileIcon}
             />
             <View
               style={{
-                flexDirection: 'column',
-                height: '100%',
+                flexDirection: "column",
+                height: "100%",
                 paddingTop: 5,
               }}
             >
@@ -123,24 +124,24 @@ const Profile = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   profile: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     paddingHorizontal: Globals.css.HorizontalPaddingView,
     flex: 1,
   },
 
   info: {
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     paddingHorizontal: Globals.css.HorizontalPaddingView / 2,
     flex: 2,
   },
 
   infoView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
     maxHeight: 100,
   },
   productArea: {
@@ -148,22 +149,22 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     paddingHorizontal: Globals.css.HorizontalPaddingView,
   },
   subtitle: {
     fontSize: 20,
-    fontWeight: 'semibold',
+    fontWeight: "semibold",
     paddingHorizontal: Globals.css.HorizontalPaddingView,
   },
-  h1: { fontSize: 20, fontWeight: '600' },
+  h1: { fontSize: 20, fontWeight: "600" },
   text: {},
   buttonStyle: {
     borderRadius: 7,
     backgroundColor: Colors.idk,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'flex-end',
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "flex-end",
     marginTop: 5,
     maxWidth: 120,
     minHeight: 22,
@@ -174,20 +175,20 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: '#d3d3d3',
+    borderColor: "#d3d3d3",
   },
   screenLink: { flex: 8, paddingTop: 30, paddingHorizontal: 10 },
   logoutStyle: {
     borderRadius: 10,
     backgroundColor: Colors.profileScreenCard,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   logoutTextStyle: { fontSize: 18, color: Colors.red },
 
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 15,
     padding: 20,
     marginVertical: 8,
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 15,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
