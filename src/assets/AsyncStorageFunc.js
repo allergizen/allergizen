@@ -1,22 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const storeDataJSON = async (value, key) => {
+const storeDataJSON = async (key, value) => {
    if (value != null) {
       try {
          const jsonValue = JSON.stringify(value);
          await AsyncStorage.setItem(key, jsonValue);
+         console.log('fatto');
       } catch (e) {
-         // saving error
+         console.log(e);
       }
    }
 };
 
-const storeDataString = async (value, key) => {
+const storeDataString = async (key, value) => {
    if (value != null) {
       try {
          await AsyncStorage.setItem(key, value);
+         console.log(key, value);
       } catch (e) {
-         // saving error
+         console.log(e);
       }
    }
 };
@@ -28,18 +30,21 @@ const getDataString = async (key) => {
          // value previously stored
       }
    } catch (e) {
-      // error reading value
+      console.log(e);
    }
 };
 
 const getDataJSON = async (key) => {
    try {
       const jsonValue = await AsyncStorage.getItem(key);
+      console.log(jsonValue);
       return jsonValue != null ? JSON.parse(jsonValue) : null;
    } catch (e) {
-      // error reading value
+      console.log(e);
    }
 };
-
-module.exports = { storeDataJSON, storeDataString, getDataString, getDataJSON };
+const mergeDataJSON = async (key, value) => {
+   await AsyncStorage.mergeItem('@MyApp_user', JSON.stringify(USER_2));
+};
+module.exports = { storeDataJSON, storeDataString, getDataString, getDataJSON, mergeDataJSON };
 //productHistory

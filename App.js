@@ -3,6 +3,8 @@ import { StyleSheet, View, StatusBar } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
+import { ScanProvider, ScanContext } from './src/assets/ScanContext';
+
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import Home from './src/screens/Home';
@@ -24,16 +26,18 @@ export default function App() {
 
    return (
       <>
-         <NavigationContainer>
-            <Stack.Navigator
-               initialRouteName={userToken ? (userToken.length > 0 ? 'Home' : 'Login') : 'Login'}
-               headerMode='none'>
-               <Stack.Screen name='Login' component={Login} />
-               <Stack.Screen name='Signup' component={Signup} />
-               <Stack.Screen name='Home'>{() => <TabBar />}</Stack.Screen>
-            </Stack.Navigator>
-         </NavigationContainer>
-         <StatusBar style='auto' />
+         <ScanProvider>
+            <NavigationContainer>
+               <Stack.Navigator
+                  initialRouteName={userToken ? (userToken.length > 0 ? 'Home' : 'Login') : 'Login'}
+                  headerMode='none'>
+                  <Stack.Screen name='Login' component={Login} />
+                  <Stack.Screen name='Signup' component={Signup} />
+                  <Stack.Screen name='Home'>{() => <TabBar />}</Stack.Screen>
+               </Stack.Navigator>
+            </NavigationContainer>
+            <StatusBar style='auto' />
+         </ScanProvider>
       </>
    );
 }

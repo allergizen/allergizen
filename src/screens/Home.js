@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 
-import React from 'react';
+import { React, useState, useEffect, useContext } from 'react';
 import Globals from '../assets/Globals.js';
 import Colors from '../components/Colors';
 import { useNavigation } from '@react-navigation/native';
@@ -10,6 +10,12 @@ import api from '../api/api';
 import LastSavedCard from '../components/LastSavedCard';
 import CronologyCard from '../components/CronologyCard.js';
 import { Tab } from '@rneui/base';
+
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+
+import { ScanProvider, ScanContext } from '../assets/ScanContext';
+
+const { getItem, setItem } = useAsyncStorage('productHistory');
 
 const SAVED = [
    {
@@ -97,8 +103,24 @@ const CRONOLOGY = [
 ];
 
 const Home = () => {
+   const [product, setProduct] = useState('');
+   const { scanned } = useContext(ScanContext);
+   // const scanned = '';
+
+   useEffect(() => {
+      // Funzione che viene chiamata quando il valore di scanned cambia
+      const handleScannedChange = (newValue) => {
+         setTimeout(() => {
+            const data = getItem().then((res) => setProduct(res));
+         }, 1000);
+      }; // Sottoscrivi all'evento di cambio di scanned
+      if (scanned) {
+         handleScannedChange(scanned);
+      }
+   }, [scanned]);
+   //getItem().then((res) => console.log('HOME: ' + res));
    return (
-      <>
+      <ScanProvider>
          <View style={styles.screen}>
             <View style={styles.welcomeView}>
                <Text style={[styles.title, styles.colorGreen]}>Bentornato!</Text>
@@ -130,7 +152,7 @@ const Home = () => {
                   <View style={{ flex: 8 }}>
                      <FlatList
                         horizontal={false}
-                        data={CRONOLOGY}
+                        data={product}
                         renderItem={CronologyCard}
                         keyExtractor={(item) => item.code}
                      />
@@ -138,7 +160,7 @@ const Home = () => {
                </View>
             </View>
          </View>
-      </>
+      </ScanProvider>
    );
 };
 

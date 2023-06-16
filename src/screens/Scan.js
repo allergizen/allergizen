@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
    Text,
    View,
@@ -14,11 +14,21 @@ import { Camera, CameraType } from 'expo-camera';
 import api from '../api/api.js';
 import { useFocusEffect } from '@react-navigation/native';
 
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+const { getItem, setItem } = useAsyncStorage('productHistory');
+
 import * as Animatable from 'react-native-animatable';
 import Svg, { Defs, G, LinearGradient, Path, SvgUri } from 'react-native-svg';
 import { Shadow } from 'react-native-shadow-2';
-
+import { ScanContext, ScanProvider } from '../assets/ScanContext.js';
 const AnimatableScrollView = Animatable.createAnimatableComponent(ScrollView);
+import {
+   storeDataJSON,
+   storeDataString,
+   getDataString,
+   getDataJSON,
+   mergeDataJSON,
+} from '../assets/AsyncStorageFunc';
 
 const ScanBorderTopLeft = (props) => (
    <Svg
@@ -48,7 +58,6 @@ const ScanBorderTopRight = (props) => (
    </Svg>
 );
 const NutriscoreA = (props) => {
-   console.log(props);
    return (
       <SvgUri
          uri={`https://static.openfoodfacts.org/images/attributes/nutriscore-${props.id}.svg`}
@@ -113,11 +122,13 @@ const QuestionIcon = (props) => (
    </Svg>
 );
 
+export const scannedContext = React.createContext(null);
+
 export default function App() {
    const screenHeight = Dimensions.get('screen').height;
 
    const [hasPermission, setHasPermission] = useState(null);
-   const [scanned, setScanned] = useState(false);
+   const { scanned, setScanned } = useContext(ScanContext);
    const [dati, setDati] = useState(null);
 
    const [cameraStatus, setCameraStatus] = useState(false);
@@ -146,7 +157,6 @@ export default function App() {
       cameraRef.current.pausePreview();
       setSnapAnim({ 0: { top: screenHeight }, 1: { top: 0.3 * screenHeight } });
 
-      console.log(data);
       //carica data su firebase
 
       api.from_barcode(data).then((res) => {
@@ -157,6 +167,10 @@ export default function App() {
             setSnapAnim(null);
             return;
          }
+
+         setItem(
+            "{name: 'Nutella',img: 'https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.427.400.jpg',code: '001',}",
+         );
 
          setDati(res);
       });
@@ -189,7 +203,9 @@ export default function App() {
       setSnapAnim({ 0: { top: resultY }, 1: { top: pos * screenHeight } });
       setResultY(pos * screenHeight);
    };
-
+   const handleScannedChange = (newValue) => {
+      setScanned(newValue);
+   };
    const scriviAllergeni = (allergens, color) => {
       const allergeni = api.translate_allergens(allergens);
       const userAllergens = api.get_allergens(allergens);
@@ -226,167 +242,171 @@ export default function App() {
    }
 
    return (
-      <View style={[styles.container, { backgroundColor: 'black' }]}>
-         {cameraStatus || Platform.OS === 'ios' ? (
-            // <></>
-            <Camera
-               onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-               ratio='16:9'
-               style={StyleSheet.absoluteFillObject}
-               type={CameraType.back}
-               barCodeTypes={[
-                  BarCodeScanner.Constants.BarCodeType.ean13,
-                  BarCodeScanner.Constants.BarCodeType.ean8,
-               ]}
-               ref={cameraRef}
-            />
-         ) : null}
+      <ScanProvider>
+         <View style={[styles.container, { backgroundColor: 'black' }]}>
+            {cameraStatus || Platform.OS === 'ios' ? (
+               // <></>
+               <Camera
+                  onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                  ratio='16:9'
+                  style={StyleSheet.absoluteFillObject}
+                  type={CameraType.back}
+                  barCodeTypes={[
+                     BarCodeScanner.Constants.BarCodeType.ean13,
+                     BarCodeScanner.Constants.BarCodeType.ean8,
+                  ]}
+                  ref={cameraRef}
+               />
+            ) : null}
 
-         <Animatable.View
-            animation={scanned ? backgroundScan : null}
-            duration={500}
-            style={
-               scanned
-                  ? {
-                       transition: 'all .2s ease',
-                       backgroundColor: '#00000999',
-                       height: '100%',
-                       width: '100%',
-                       flex: 1,
-                       flexDirection: 'column',
-                       justifyContent: 'center',
-                       alignItems: 'center',
-                    }
-                  : {
-                       backgroundColor: '#00000000',
-                       height: '100%',
-                       width: '100%',
-                       flex: 1,
-                       flexDirection: 'column',
-                       justifyContent: 'center',
-                       alignItems: 'center',
-                       transition: 'all .2s ease',
-                    }
-            }>
-            {!scanned && (
-               <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 15 }}>
-                  INQUADRA UN CODICE A BARRE
-               </Text>
-            )}
-            <View style={styles.rectangle}>
-               <ScanBorderTopLeft style={styles.svgTopLeft}></ScanBorderTopLeft>
-               <ScanBorderTopRight style={styles.svgTopRight}></ScanBorderTopRight>
-               <ScanBorderBottomRight style={styles.svgBottomRight}></ScanBorderBottomRight>
-               <ScanBorderBottomLeft style={styles.svgBottomLeft}></ScanBorderBottomLeft>
-               <Animatable.View
-                  style={scanned ? styles.bar : { visibility: 'hidden' }}
-                  animation={scanned ? scan : null}
-                  duration={2000}
-                  iterationCount='infinite'></Animatable.View>
-            </View>
-         </Animatable.View>
+            <Animatable.View
+               animation={scanned ? backgroundScan : null}
+               duration={500}
+               style={
+                  scanned
+                     ? {
+                          transition: 'all .2s ease',
+                          backgroundColor: '#00000999',
+                          height: '100%',
+                          width: '100%',
+                          flex: 1,
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                       }
+                     : {
+                          backgroundColor: '#00000000',
+                          height: '100%',
+                          width: '100%',
+                          flex: 1,
+                          flexDirection: 'column',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          transition: 'all .2s ease',
+                       }
+               }>
+               {!scanned && (
+                  <Text style={{ color: 'white', fontWeight: 'bold', marginBottom: 15 }}>
+                     INQUADRA UN CODICE A BARRE
+                  </Text>
+               )}
+               <View style={styles.rectangle}>
+                  <ScanBorderTopLeft style={styles.svgTopLeft}></ScanBorderTopLeft>
+                  <ScanBorderTopRight style={styles.svgTopRight}></ScanBorderTopRight>
+                  <ScanBorderBottomRight style={styles.svgBottomRight}></ScanBorderBottomRight>
+                  <ScanBorderBottomLeft style={styles.svgBottomLeft}></ScanBorderBottomLeft>
+                  <Animatable.View
+                     style={scanned ? styles.bar : { visibility: 'hidden' }}
+                     animation={scanned ? scan : null}
+                     duration={2000}
+                     iterationCount='infinite'></Animatable.View>
+               </View>
+            </Animatable.View>
 
-         <Animatable.View
-            animation={snapAnim}
-            style={[styles.result, { top: resultY }]}
-            duration={500}>
-            <View
-               style={styles.dragHitBox}
-               onStartShouldSetResponder={() => {
-                  setSnapAnim(null);
-                  return () => true;
-               }}
-               onResponderMove={handleDrag}
-               onResponderRelease={handleRelease}>
-               <View style={styles.dragBar}></View>
-            </View>
+            <Animatable.View
+               animation={snapAnim}
+               style={[styles.result, { top: resultY }]}
+               duration={500}>
+               <View
+                  style={styles.dragHitBox}
+                  onStartShouldSetResponder={() => {
+                     setSnapAnim(null);
+                     return () => true;
+                  }}
+                  onResponderMove={handleDrag}
+                  onResponderRelease={handleRelease}>
+                  <View style={styles.dragBar}></View>
+               </View>
 
-            {dati === null ? (
-               <></>
-            ) : (
-               <>
-                  <View style={styles.product}>
-                     <Image
-                        source={{ uri: dati.product.image_url }}
-                        style={styles.img}
-                        resizeMode='contain'></Image>
-                     <View style={styles.info}>
-                        <Text style={{ fontSize: 40, fontWeight: 'bold', marginBottom: -5 }}>
-                           {dati.product.product_name}
-                        </Text>
-                        <Text style={{ fontSize: 25, color: 'gray' }}>{dati.product.brands}</Text>
-                        <Shadow offset={[4, 10]}>
-                           <View style={styles.resultview}>
-                              {api.get_allergens(dati.product.allergens).length != 0 ? (
-                                 <>
-                                    <CrossIcon></CrossIcon>
-                                    <Text>Allergie rilevate</Text>
-                                 </>
-                              ) : api.get_allergens(dati.product.traces).length === 0 ? (
-                                 <>
-                                    <CheckIcon></CheckIcon>
-                                    <Text>Allergie non rilevate</Text>
-                                 </>
-                              ) : (
-                                 <>
-                                    <QuestionIcon></QuestionIcon>
-                                    <Text>Possibili allergie</Text>
-                                 </>
-                              )}
-                           </View>
-                        </Shadow>
+               {dati === null ? (
+                  <></>
+               ) : (
+                  <>
+                     <View style={styles.product}>
+                        <Image
+                           source={{ uri: dati.product.image_url }}
+                           style={styles.img}
+                           resizeMode='contain'></Image>
+                        <View style={styles.info}>
+                           <Text style={{ fontSize: 40, fontWeight: 'bold', marginBottom: -5 }}>
+                              {dati.product.product_name}
+                           </Text>
+                           <Text style={{ fontSize: 25, color: 'gray' }}>
+                              {dati.product.brands}
+                           </Text>
+                           <Shadow offset={[4, 10]}>
+                              <View style={styles.resultview}>
+                                 {api.get_allergens(dati.product.allergens).length != 0 ? (
+                                    <>
+                                       <CrossIcon></CrossIcon>
+                                       <Text>Allergie rilevate</Text>
+                                    </>
+                                 ) : api.get_allergens(dati.product.traces).length === 0 ? (
+                                    <>
+                                       <CheckIcon></CheckIcon>
+                                       <Text>Allergie non rilevate</Text>
+                                    </>
+                                 ) : (
+                                    <>
+                                       <QuestionIcon></QuestionIcon>
+                                       <Text>Possibili allergie</Text>
+                                    </>
+                                 )}
+                              </View>
+                           </Shadow>
 
-                        <TouchableOpacity
-                           style={styles.savebutton}
-                           onPress={() => alert('Aggiunto ai preferiti!')}>
-                           <AddIcon></AddIcon>
-                           <Text>Aggiungi ai preferiti</Text>
-                        </TouchableOpacity>
+                           <TouchableOpacity
+                              style={styles.savebutton}
+                              onPress={() => alert('Aggiunto ai preferiti!')}>
+                              <AddIcon></AddIcon>
+                              <Text>Aggiungi ai preferiti</Text>
+                           </TouchableOpacity>
+                        </View>
                      </View>
-                  </View>
 
-                  <Text style={styles.infoHeader}>Allergeni</Text>
-                  <Text style={styles.infoContent}>
-                     {scriviAllergeni(dati.product.allergens, 'red')}
-                  </Text>
-                  <Text style={[styles.infoHeader, { top: 20 }]}>Ingredienti</Text>
-                  <Text style={[styles.infoContent, { top: 20 }]}>
-                     {dati.product.ingredients_text === ''
-                        ? 'Non trovati '
-                        : dati.product.ingredients_text}
-                  </Text>
-                  <Text style={[styles.infoHeader, { top: 40 }]}>Tracce</Text>
-                  <Text style={[styles.infoContent, { top: 40 }]}>
-                     {dati.product.traces === ''
-                        ? 'Niente'
-                        : scriviAllergeni(dati.product.traces, 'gold')}
-                  </Text>
-                  <Text style={[styles.infoHeader, { top: 50 }]}>Punteggio</Text>
+                     <Text style={styles.infoHeader}>Allergeni</Text>
+                     <Text style={styles.infoContent}>
+                        {scriviAllergeni(dati.product.allergens, 'red')}
+                     </Text>
+                     <Text style={[styles.infoHeader, { top: 20 }]}>Ingredienti</Text>
+                     <Text style={[styles.infoContent, { top: 20 }]}>
+                        {dati.product.ingredients_text === ''
+                           ? 'Non trovati '
+                           : dati.product.ingredients_text}
+                     </Text>
+                     <Text style={[styles.infoHeader, { top: 40 }]}>Tracce</Text>
+                     <Text style={[styles.infoContent, { top: 40 }]}>
+                        {dati.product.traces === ''
+                           ? 'Niente'
+                           : scriviAllergeni(dati.product.traces, 'gold')}
+                     </Text>
+                     <Text style={[styles.infoHeader, { top: 50 }]}>Punteggio</Text>
 
-                  <View style={styles.nutriScore}>
-                     {/* <Image source={{uri: 'https://static.openfoodfacts.org/images/attributes/nutriscore-'+ dati.product.nutrition_grades === null  +'.svg' }} style={styles.img} resizeMode="contain"></Image> */}
-                     {/* <Image source='https://static.openfoodfacts.org/images/attributes/nutriscore-d.svg' style={[styles.img, {width: 300, height: 100, position: 'relative'}]} resizeMode="contain"></Image> */}
-                     <NutriscoreA
-                        style={{ transform: 'scale(0.7)', top: 15, left: -17 }}
-                        id={
-                           dati.product.nutrition_grades != null
-                              ? dati.product.nutrition_grades
-                              : 'unknown'
-                        }></NutriscoreA>
-                     <View style={styles.nutriScoreInfo}>
-                        <Text style={{ fontSize: 25, color: 'orange', fontWeight: 'bold' }}>
-                           Nutri-Score{' '}
-                           {dati.product.nutrition_grades != null
-                              ? dati.product.nutrition_grades.toUpperCase()
-                              : 'sconosciuto'}
-                        </Text>
-                        <Text>Qualità nutrizionale bassa</Text>
+                     <View style={styles.nutriScore}>
+                        {/* <Image source={{uri: 'https://static.openfoodfacts.org/images/attributes/nutriscore-'+ dati.product.nutrition_grades === null  +'.svg' }} style={styles.img} resizeMode="contain"></Image> */}
+                        {/* <Image source='https://static.openfoodfacts.org/images/attributes/nutriscore-d.svg' style={[styles.img, {width: 300, height: 100, position: 'relative'}]} resizeMode="contain"></Image> */}
+                        <NutriscoreA
+                           style={{ transform: 'scale(0.7)', top: 15, left: -17 }}
+                           id={
+                              dati.product.nutrition_grades != null
+                                 ? dati.product.nutrition_grades
+                                 : 'unknown'
+                           }></NutriscoreA>
+                        <View style={styles.nutriScoreInfo}>
+                           <Text style={{ fontSize: 25, color: 'orange', fontWeight: 'bold' }}>
+                              Nutri-Score{' '}
+                              {dati.product.nutrition_grades != null
+                                 ? dati.product.nutrition_grades.toUpperCase()
+                                 : 'sconosciuto'}
+                           </Text>
+                           <Text>Qualità nutrizionale bassa</Text>
+                        </View>
                      </View>
-                  </View>
-               </>
-            )}
-         </Animatable.View>
-      </View>
+                  </>
+               )}
+            </Animatable.View>
+         </View>
+      </ScanProvider>
    );
 }
 
