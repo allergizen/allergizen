@@ -8,14 +8,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  signInWithCustomToken,
-  getIdToken,
-} from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getFirestore } from 'firebase/firestore/lite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { KEY, AD, PRID, STBU, MSI, AI } from '@env';

@@ -1,15 +1,11 @@
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 
 import React from 'react';
 import Globals from '../assets/Globals.js';
 import Colors from '../components/Colors';
-import { useNavigation } from '@react-navigation/native';
-import TabBar from '../components/TabBar.js';
 
-import api from '../api/api';
 import LastSavedCard from '../components/LastSavedCard';
 import CronologyCard from '../components/CronologyCard.js';
-import { Tab } from '@rneui/base';
 
 const SAVED = [
   {

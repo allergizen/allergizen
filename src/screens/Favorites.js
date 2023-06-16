@@ -8,7 +8,6 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  StatusBar,
   Image,
 } from 'react-native';
 
