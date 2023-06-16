@@ -1,51 +1,49 @@
-import {
-   StyleSheet,
-   Text,
-   SafeAreaView,
-   TouchableWithoutFeedback,
-   Platform,
-   // StatusBar,
-   View,
-} from 'react-native';
-import Colors from './src/components/Colors';
+import React from 'react';
+import { StyleSheet, View, StatusBar } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 
-import Home from './src/screens/Home';
-import Search from './src/screens/Search';
-import Scan from './src/screens/Scan';
 import Login from './src/screens/Login';
+import Signup from './src/screens/Signup';
+import Home from './src/screens/Home';
 import TabBar from './src/components/TabBar';
 
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-import * as NavigationBar from 'expo-navigation-bar';
-import { StatusBar } from 'expo-status-bar';
-
-const Tab = createMaterialBottomTabNavigator();
+const Stack = createStackNavigator();
 
 export default function App() {
-   NavigationBar.setBackgroundColorAsync("white");
+  const [userToken, setUserToken] = React.useState('asd');
 
-   return (
-      <>
-         <StatusBar animated={false} style={'auto'} />
-         <TabBar />
-      </>
-   );
+  // React.useEffect(() => {
+  //   // Verifica se l'utente è già autenticato e imposta il token
+  //   // const checkUserToken = () => {
+  //   //   const token = setUserToken(token); // Recupera il token di autenticazione dall'archiviazione o da altro luogo;
+  //   // };
+
+  //   // checkUserToken();
+  // }, []);
+
+  return (
+    <>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName={
+            userToken ? (userToken.length > 0 ? 'Home' : 'Login') : 'Login'
+          }
+          headerMode='none'
+        >
+          <Stack.Screen name='Login' component={Login} />
+          <Stack.Screen name='Signup' component={Signup} />
+          <Stack.Screen name='Home'>{() => <TabBar />}</Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+      <StatusBar style='auto' />
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      backgroundColor: Colors.green,
-      justifyContent: 'space-between', // or 'center'
-      alignItems: 'flex-start', // or 'center'
-      padding: 30,
-      paddingTop: Platform.OS === 'android' ? 60 : 0,
-      flexDirection: 'row',
-   },
-   testo: {
-      fontSize: 24,
-   },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
 });
