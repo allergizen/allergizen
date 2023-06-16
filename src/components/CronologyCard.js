@@ -1,21 +1,30 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
+import { React, useState } from 'react';
 
 import Colors from './Colors';
 
-function CronologyCard({ item }) {
-   const [image, setImage] = React.useState('');
+const CronologyCard = ({ item }) => {
+   fetch(item.img).then((res) => res.blob().then());
    return (
       <View style={styles.cronologyCardStyle}>
-         <View style={{ flex: 1, padding: 15 }}>
-            <Image source={{ uri: item.img }} style={styles.imageBackground} resizeMode='contain' />
+         <View
+            style={{
+               padding: 0,
+               borderRadius: 10,
+               borderWidth: 0,
+               borderColor: '#fff',
+               overflow: 'hidden',
+               maxHeight: 150,
+            }}>
+            <ImageBackground source={{ uri: item.img }} style={styles.imageBackground} />
          </View>
-         <View style={{ flex: 1, alignSelf: 'center' }}>
+
+         <View style={{ flex: 2, alignSelf: 'center' }}>
             <Text style={{ flex: 5, alignSelf: 'center', fontSize: 16 }}>{item.name}</Text>
          </View>
       </View>
    );
-}
+};
 
 const styles = StyleSheet.create({
    cronologyCardStyle: {
@@ -27,8 +36,8 @@ const styles = StyleSheet.create({
       borderRadius: 25,
       padding: 5,
       backgroundColor: '#fff',
-      alignItems: 'space-between',
-      justifyContent: 'center',
+      alignItems: 'space-around',
+      justifyContent: 'space-around',
       alignSelf: 'center',
    },
    imageView: {
@@ -36,9 +45,15 @@ const styles = StyleSheet.create({
       flex: 2,
    },
    imageBackground: {
+      // height: '90%',
+      borderRadius: 5,
       flex: 1,
-      minWidth: 100,
-      overflow: 'hidden',
+      // width: 50,
+      width: '100%',
+      // height: '100%',
+      aspectRatio: 0.7,
+      resizeMode: 'cover',
+      margin: -1,
    },
 });
 
