@@ -127,7 +127,7 @@ const Home = () => {
     <ScanProvider>
       <View style={styles.screen}>
         <View style={styles.welcomeView}>
-          <Text style={[styles.title, styles.colorGreen]}>Bentornato!</Text>
+          <Text style={[styles.title]}>Bentornato!</Text>
         </View>
         <View style={styles.productArea}>
           <View
@@ -137,7 +137,7 @@ const Home = () => {
               paddingHorizontal: Globals.css.HorizontalPaddingView,
             }}
           >
-            <Text style={[styles.h1, styles.colorGreen]}>Ultimi Salvati</Text>
+            <Text style={[styles.h1]}>Ultimi Salvati</Text>
             <View style={{ flex: 4 }}>
               <FlatList
                 horizontal={true}
@@ -154,7 +154,7 @@ const Home = () => {
               paddingHorizontal: Globals.css.HorizontalPaddingView,
             }}
           >
-            <Text style={[styles.h1, styles.colorGreen]}>Cronologia</Text>
+            <Text style={[styles.h1]}>Cronologia</Text>
             <View style={{ flex: 8 }}>
               <FlatList
                 horizontal={false}

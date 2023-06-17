@@ -19,7 +19,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Globals from "../assets/Globals.js";
 import TextInput from 'react-native-textinput-with-icons';
 import * as SecureStore from 'expo-secure-store';
-import TextInput from "react-native-textinput-with-icons";
 import Colors from "../components/Colors.js";
 
 import { KEY, AD, PRID, STBU, MSI, AI } from "@env";
