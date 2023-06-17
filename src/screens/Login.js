@@ -19,6 +19,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Globals from "../assets/Globals.js";
 import TextInput from 'react-native-textinput-with-icons';
 import * as SecureStore from 'expo-secure-store';
+import TextInput from "react-native-textinput-with-icons";
+import Colors from "../components/Colors.js";
 
 import { KEY, AD, PRID, STBU, MSI, AI } from "@env";
 
@@ -31,7 +33,7 @@ const firebaseConfig = {
   appId: AI,
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
 auth.languageCode = "it";
@@ -75,11 +77,8 @@ auth.onAuthStateChanged((user) => {
   }
 });
 
-
-
-
 //checkLoginIn();
-const Login = ({navigation}) => {
+export default Login = ({ navigation }) => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -96,12 +95,15 @@ const Login = ({navigation}) => {
       });
   };
 
-     // per andare alla pagina di Signup
-     const handleSignupButtonNavigation = () => {
-      navigation.navigate('Signup');
-   };
+  // per andare alla pagina di Signup
+  const handleSignupButtonNavigation = () => {
+    navigation.navigate("Signup");
+  };
 
-   
+  const handleForgotPasspButtonNavigation = () => {
+    navigation.navigate("ForgotPassword");
+  };
+
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.loginView}>
@@ -125,7 +127,12 @@ const Login = ({navigation}) => {
         />
       </View>
       <TouchableOpacity onPress={() => {}} style={styles.forgotContainer}>
-        <Text style={styles.textAsBtn}>Forgot password?</Text>
+        <Text
+          style={styles.textAsBtn}
+          onPress={handleForgotPasspButtonNavigation}
+        >
+          Forgot password?
+        </Text>
       </TouchableOpacity>
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleLogin} style={styles.button}>
@@ -135,15 +142,18 @@ const Login = ({navigation}) => {
         <View style={styles.register}>
           <Text style={styles.text}>New here? </Text>
           <TouchableOpacity onPress={() => {}} style={styles.textAsBtn}>
-            <Text style={styles.textAsBtn} onPress={handleSignupButtonNavigation}>Register</Text>
+            <Text
+              style={styles.textAsBtn}
+              onPress={handleSignupButtonNavigation}
+            >
+              Register
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
     </KeyboardAvoidingView>
   );
 };
-
-export default Login;
 
 const styles = StyleSheet.create({
   container: {
@@ -195,7 +205,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 20,
   },
-  inputContainer:{
-   marginLeft: 15,
-  }
+  inputContainer: {
+    marginLeft: 15,
+  },
 });

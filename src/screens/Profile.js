@@ -20,17 +20,18 @@ import ProfileLinkScreenCard from '../components/ProfileLinkScreenCard';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDoc, doc } from "firebase/firestore/lite";
 import { KEY, AD, PRID, STBU, MSI, AI, _UID } from "@env";
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { app } from "./Login";
 const firebaseConfig = {
-   apiKey: KEY,
-   authDomain: AD,
-   projectId: PRID,
-   storageBucket: STBU,
-   messagingSenderId: MSI,
-   appId: AI,
+  apiKey: KEY,
+  authDomain: AD,
+  projectId: PRID,
+  storageBucket: STBU,
+  messagingSenderId: MSI,
+  appId: AI,
 };
 
-const app = initializeApp(firebaseConfig);
+// const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const uid = _UID;
 var readed = false;
@@ -172,16 +173,21 @@ const Profile = () => {
 };
 
 const styles = StyleSheet.create({
-   screen: {
-      flex: 1,
-      flexDirection: 'column',
+  screen: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  profile: {
+    justifyContent: "flex-end",
+    paddingHorizontal: Globals.css.HorizontalPaddingView,
+    flex: 1,
+  },
 
-   },
-   profile: {
-      justifyContent: 'flex-end',
-      paddingHorizontal: Globals.css.HorizontalPaddingView,
-      flex: 1,
-   },
+  info: {
+    justifyContent: "flex-end",
+    paddingHorizontal: Globals.css.HorizontalPaddingView / 2,
+    flex: 2,
+  },
 
    info: {
       justifyContent: 'flex-end',
