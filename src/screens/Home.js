@@ -39,73 +39,73 @@ const SAVED = [
   },
 ];
 const CRONOLOGY = [
-   {
-      name: 'Nutella',
-      img: 'https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.427.400.jpg',
-      code: '001',
-   },
-   {
-      name: 'Acqua',
-      img: 'https://images.openfoodfacts.org/images/products/327/408/000/5003/front_it.558.full.jpg',
-      code: '002',
-   },
-   {
-      name: 'Nutella Biscuit',
-      img: 'https://images.openfoodfacts.org/images/products/544/900/021/4911/front_fr.145.200.jpg',
-      code: '003',
-   },
-   {
-      name: 'Noir',
-      img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
-      code: '004',
-   },
-   {
-      name: 'Nutella',
-      img: 'https://images.openfoodfacts.org/images/products/807/680/954/5396/front_de.206.400.jpg',
-      code: '00113434',
-   },
-   {
-      name: 'Acqua',
-      img: 'https://images.openfoodfacts.org/images/products/800/511/000/1550/front_it.3.400.jpg',
-      code: '002142123',
-   },
-   {
-      name: 'Nutella Biscuit',
-      img: 'https://images.openfoodfacts.org/images/products/800/166/512/7493/front_it.20.400.jpg',
-      code: '001231233',
-   },
-   {
-      name: 'Noir',
-      img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
-      code: '0045324141324',
-   },
-   {
-      name: 'Nutella',
-      img: 'https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.427.400.jpg',
-      code: '00213',
-   },
-   {
-      name: 'Acqua',
-      img: 'https://images.openfoodfacts.org/images/products/327/408/000/5003/front_it.558.full.jpg',
-      code: '002134',
-   },
-   {
-      name: 'Nutella Biscuit',
-      img: 'https://images.openfoodfacts.org/images/products/800/050/031/0427/front_it.108.400.jpg',
-      code: '00312',
-   },
-   {
-      name: 'Noir',
-      img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
-      code: '004123',
-   },
+  {
+    name: 'Nutella',
+    img: 'https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.427.400.jpg',
+    code: '001',
+  },
+  {
+    name: 'Acqua',
+    img: 'https://images.openfoodfacts.org/images/products/327/408/000/5003/front_it.558.full.jpg',
+    code: '002',
+  },
+  {
+    name: 'Nutella Biscuit',
+    img: 'https://images.openfoodfacts.org/images/products/544/900/021/4911/front_fr.145.200.jpg',
+    code: '003',
+  },
+  {
+    name: 'Noir',
+    img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
+    code: '004',
+  },
+  {
+    name: 'Nutella',
+    img: 'https://images.openfoodfacts.org/images/products/807/680/954/5396/front_de.206.400.jpg',
+    code: '00113434',
+  },
+  {
+    name: 'Acqua',
+    img: 'https://images.openfoodfacts.org/images/products/800/511/000/1550/front_it.3.400.jpg',
+    code: '002142123',
+  },
+  {
+    name: 'Nutella Biscuit',
+    img: 'https://images.openfoodfacts.org/images/products/800/166/512/7493/front_it.20.400.jpg',
+    code: '001231233',
+  },
+  {
+    name: 'Noir',
+    img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
+    code: '0045324141324',
+  },
+  {
+    name: 'Nutella',
+    img: 'https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.427.400.jpg',
+    code: '00213',
+  },
+  {
+    name: 'Acqua',
+    img: 'https://images.openfoodfacts.org/images/products/327/408/000/5003/front_it.558.full.jpg',
+    code: '002134',
+  },
+  {
+    name: 'Nutella Biscuit',
+    img: 'https://images.openfoodfacts.org/images/products/800/050/031/0427/front_it.108.400.jpg',
+    code: '00312',
+  },
+  {
+    name: 'Noir',
+    img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
+    code: '004123',
+  },
 ];
 
 const Home = ({ navigation }) => {
-   const [product, setProduct] = useState({});
-   const { scanned } = useContext(Context);
+  const [product, setProduct] = useState({});
+  const { scanned } = useContext(Context);
 
-   // const scanned = '';
+  // const scanned = '';
 
   useEffect(() => {
     // Funzione che viene chiamata quando il valore di scanned cambia
