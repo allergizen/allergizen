@@ -1,29 +1,28 @@
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { React, useState } from 'react';
 import { IconButton } from '@react-native-material/core';
-import api from '../api/api';
 import Colors from './Colors';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-
-allergy = 3;
+import api from '../api/api';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const CronologyCard = ({ item }) => {
   fetch(item.img).then((res) => res.blob().then());
-  //   console.log(item.product_name);
+  const numAll = api.get_allergens(item.allergens).length;
+
   return (
     <View
       style={[
         styles.cronologyCardStyle,
-        item.allergy == 0
+        numAll === 0
           ? styles.noAllergy
-          : item.allergy == 1
+          : numAll === 1
           ? styles.allergy
           : styles.undefinedAllergy,
       ]}
     >
       <View
         style={{
-          //  padding: 0,
           borderTopLeftRadius: 25,
           borderBottomLeftRadius: 25,
           overflow: 'hidden',
@@ -37,37 +36,47 @@ const CronologyCard = ({ item }) => {
         />
       </View>
 
-      <View
-        style={{
-          flex: 2,
-          alignSelf: 'center',
-          alignContent: 'center',
-          padding: 5,
-        }}
-      >
+      <View style={{ flex: 2, padding: 5, marginLeft: 15 }}>
         <View
           style={{
+            flex: 1,
             justifyContent: 'center',
-            alignItems: 'center',
-            paddingVertical: 5,
+            textAlignVertical: 'center',
           }}
         >
-          <Text style={{ fontSize: 25 }}>{item.product_name}</Text>
-          <Text style={{ fontSize: 15 }}>{item.brand}</Text>
-          <Text style={{ fontSize: 12 }}>
-            {item.allergens
-              ? item.allergens.join(', ')
-              : 'Non ci sono allergie'}
+          <Text style={{ fontSize: 25, lineHeight: 30 }}>
+            {item.product_name.length > 16
+              ? item.product_name.slice(0, 16) + '...'
+              : item.product_name
+            }
           </Text>
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ flex: 3 }}></View>
-          <View style={{ flex: 1 }}>
-            <IconButton
-              icon={(props) => <Icon name='plus' {...props} />}
-              color='green'
-              onPress={() => {}}
-            />
+          <Text style={{ fontSize: 15, lineHeight: 20 }}>{item.brand}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              marginTop: 5,
+            }}
+          >
+            {numAll > 0 ? (
+              <MaterialCommunityIcons
+                name='close-circle'
+                color={'#000'}
+                size={26}
+              />
+            ) : (
+              <MaterialCommunityIcons
+                name='check-circle'
+                color={'#000'}
+                size={26}
+              />
+            )}
+            <Text style={{ fontSize: 12, marginLeft: 5 }}>
+              {item.allergens
+                ? item.allergens.join(', ')
+                : 'Non ci sono allergie'}
+            </Text>
           </View>
         </View>
       </View>
@@ -77,17 +86,16 @@ const CronologyCard = ({ item }) => {
 
 const styles = StyleSheet.create({
   allergy: {
-    backgroundColor: '#FEE1E1',
+    backgroundColor: Colors.red,
   },
 
   noAllergy: {
-    backgroundColor: '#DFEBCB',
+    backgroundColor: Colors.lightGreen,
   },
 
   undefinedAllergy: {
-    backgroundColor: '#FCEBC9',
+    backgroundColor: Colors.idk,
   },
-
   cronologyCardStyle: {
     height: 125,
     flex: 1,
@@ -95,7 +103,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 25,
     backgroundColor: '#fff',
-    alignItems: 'space-around',
+    alignItems: 'center',
     justifyContent: 'space-around',
     alignSelf: 'center',
   },
