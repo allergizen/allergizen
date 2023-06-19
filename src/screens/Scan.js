@@ -21,7 +21,7 @@ import * as Animatable from 'react-native-animatable';
 import Svg, { Path, SvgUri } from 'react-native-svg';
 import { Shadow } from 'react-native-shadow-2';
 
-import { ScanContext, ScanProvider } from '../assets/Context.js';
+import { Context, Provider } from '../assets/Context.js';
 
 import { CrossIcon, CheckIcon, QuestionIcon } from '../assets/svgIcons.js';
 
@@ -121,7 +121,7 @@ export default function App() {
    const screenHeight = Dimensions.get('screen').height;
 
    const [hasPermission, setHasPermission] = useState(null);
-   const { scanned, setScanned } = useContext(ScanContext);
+   const { scanned, setScanned } = useContext(Context);
    const [dati, setDati] = useState(null);
 
    const [cameraStatus, setCameraStatus] = useState(false);
@@ -251,7 +251,7 @@ export default function App() {
    }
 
    return (
-      <ScanProvider>
+      <Provider>
          <View style={[styles.container, { backgroundColor: 'black' }]}>
             {cameraStatus || Platform.OS === 'ios' ? (
                // <></>
@@ -428,7 +428,7 @@ export default function App() {
                )}
             </Animatable.View>
          </View>
-      </ScanProvider>
+      </Provider>
    );
 }
 

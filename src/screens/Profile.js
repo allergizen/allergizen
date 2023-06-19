@@ -80,7 +80,7 @@ const Profile = () => {
    const Item = ({ name, state }) => (
       //crea una card con il nome a sinistra e il bottone a destra
       <View style={styles.card}>
-         <View style={{ flexDirection: 'row', flex: "row" }}>
+         <View style={{ flexDirection: 'row' }}>
             <View style={{ flex: 3 }}>
                <Text style={styles.cardTitle}>{name}</Text>
             </View>

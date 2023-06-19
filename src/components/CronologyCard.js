@@ -23,7 +23,7 @@ const CronologyCard = ({ item }) => {
          <View style={{ flex: 2, alignSelf: 'center', alignContent: 'center', padding: 5}}>
             <Text style={{ alignSelf: 'center', fontSize: 25 }}>{item.name}</Text>
             <Text style={{ alignSelf: 'center', fontSize: 17 }}>Kellog's</Text>
-            <View style={{ flexDirection: 'row', flex: "row" }}>
+            <View style={{ flexDirection: 'row' }}>
                <View style={{ flex: 3 }}>
                   <Text style={{fontSize: 20}}>Allergeni rilevati</Text>
                </View>

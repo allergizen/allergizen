@@ -12,7 +12,7 @@ import { Tab } from '@rneui/base';
 
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
-import { ScanProvider, ScanContext } from '../assets/Context';
+import { Provider, Context } from '../assets/Context';
 
 const { getItem, setItem } = useAsyncStorage('productHistory');
 
@@ -124,7 +124,7 @@ const Home = () => {
    }, [scanned]);
    //getItem().then((res) => console.log('HOME: ' + res));
    return (
-      <ScanProvider>
+      <Provider>
          <View style={styles.screen}>
             <View style={styles.welcomeView}>
                <Text style={[styles.title]}>Bentornato!</Text>
@@ -164,7 +164,7 @@ const Home = () => {
                </View>
             </View>
          </View>
-      </ScanProvider>
+      </Provider>
    );
 };
 

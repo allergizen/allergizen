@@ -3,7 +3,7 @@ import { StyleSheet, View, StatusBar } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 
-import { ScanProvider, ScanContext } from './src/assets/Context';
+import { Provider, Context } from './src/assets/Context';
 
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
@@ -25,7 +25,7 @@ export default function App() {
 
    return (
       <>
-         <ScanProvider>
+         <Provider>
             <NavigationContainer>
                <Stack.Navigator
                   initialRouteName={
@@ -41,7 +41,7 @@ export default function App() {
                </Stack.Navigator>
             </NavigationContainer>
             <StatusBar style='auto' />
-         </ScanProvider>
+         </Provider>
       </>
    );
 }
