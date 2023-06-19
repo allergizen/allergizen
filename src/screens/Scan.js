@@ -9,13 +9,14 @@ import {
    Dimensions,
    ScrollView,
 } from 'react-native';
+
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Camera, CameraType } from 'expo-camera';
 import api from '../api/api.js';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-const { getItem, setItem } = useAsyncStorage('productHistory');
+const { getItem, setItem, mergeItem } = useAsyncStorage('productHistory');
 
 import * as Animatable from 'react-native-animatable';
 import Svg, { Path, SvgUri } from 'react-native-svg';
@@ -161,7 +162,7 @@ export default function App() {
                img: res.product.image_front_url,
                code: res.code,
             };
-            console.log(item);
+
             if (res.status === 0) {
                setScanned(false);
                iuokjn;
@@ -169,8 +170,11 @@ export default function App() {
                setSnapAnim(null);
                return;
             }
-
-            setItem(JSON.stringify([item]));
+            getItem().then((res) => {
+               res = JSON.parse(res).push(item);
+               console.log('risposta ' + JSON.stringify(res));
+               // setItem();
+            });
 
             setDati(res);
             setSnapAnim({ 0: { top: screenHeight }, 1: { top: 0.1 * screenHeight } });

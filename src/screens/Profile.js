@@ -12,13 +12,12 @@ import React from 'react';
 
 import { IconButton } from '@react-native-material/core';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import Dialog from 'react-native-dialog';
 
 import Colors from '../components/Colors';
 import Globals from '../assets/Globals';
 import ProfileLinkScreenCard from '../components/ProfileLinkScreenCard';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDoc, doc } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { app } from './Login';
@@ -52,6 +51,7 @@ const Profile = () => {
          },
          { merge: true },
       );
+      console.log('Allergia aggiunta');
    };
 
    const removeAllergia = async (allergia) => {
@@ -94,7 +94,13 @@ const Profile = () => {
                      icon={(props) => <Icon name='close' {...props} />}
                      color='red'
                      onPress={() => {
-                        //removeAllergia(name);
+                        removeAllergia(
+                           name == 'Anidride solforosa'
+                              ? 'Anidridesolforosa'
+                              : name == 'Frutta a guscio'
+                              ? 'Fruttaaguscio'
+                              : name,
+                        );
                      }}
                   />
                ) : (
@@ -102,7 +108,13 @@ const Profile = () => {
                      icon={(props) => <Icon name='plus' {...props} />}
                      color='green'
                      onPress={() => {
-                        //addAllergia(name);
+                        addAllergia(
+                           name == 'Anidride solforosa'
+                              ? 'Anidridesolforosa'
+                              : name == 'Frutta a guscio'
+                              ? 'Fruttaaguscio'
+                              : name,
+                        );
                      }}
                   />
                )}
@@ -116,13 +128,6 @@ const Profile = () => {
       setVisible(true);
    };
 
-   const handleCancel = () => {
-      setVisible(false);
-   };
-   const confirmChanges = () => {
-      setVisible(false);
-   };
-
    if (!readed) {
       getInfo();
       var interval = setInterval(() => {
@@ -131,18 +136,9 @@ const Profile = () => {
          }
       }, 100);
    }
-   //<Dialog.input label="Nome"></Dialog.input>
-   //<Dialog.input label="Email"></Dialog.input>
 
    return (
       <SafeAreaView style={styles.screen}>
-         <Dialog.Container visible={visible}>
-            <Dialog.Title>Modifica account</Dialog.Title>
-
-            <Dialog.Button label='Annulla' onPress={handleCancel} />
-            <Dialog.Button label='Conferma' onPress={confirmChanges} />
-         </Dialog.Container>
-
          <View style={styles.profile}>
             <Text style={styles.title}>Profile</Text>
          </View>
@@ -159,9 +155,6 @@ const Profile = () => {
                      }}>
                      <Text style={[styles.h1]}>{name}</Text>
                      <Text style={[styles.text]}>{email}</Text>
-                     <TouchableOpacity onPress={showDialog} style={styles.buttonStyle}>
-                        <Text style={{ fontWeight: 500 }}>Modifica</Text>
-                     </TouchableOpacity>
                   </View>
                </View>
             </View>

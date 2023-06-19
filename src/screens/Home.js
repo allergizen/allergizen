@@ -113,11 +113,10 @@ const Home = ({ navigation }) => {
          setTimeout(() => {
             getItem().then((res) => {
                const data = JSON.parse(res.toString());
-               console.log(data);
+
                setProduct(data);
             });
          }, 1000);
-         console.log(product);
       }; // Sottoscrivi all'evento di cambio di scanned
       if (scanned) {
          handleScannedChange(scanned);
