@@ -18,88 +18,27 @@ const { getItem, setItem } = useAsyncStorage('productHistory');
 
 const SAVED = [
   {
-    name: 'Nutella',
-    img: 'https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.427.400.jpg',
+    name: 'Lista 1',
+    color: '#E5E1FE',
     code: '001',
   },
   {
-    name: 'Acqua',
-    img: 'https://images.openfoodfacts.org/images/products/327/408/000/5003/front_it.558.full.jpg',
+    name: 'Lista 2',
+    color: '#A979C6',
     code: '002',
   },
   {
-    name: 'Nutella Biscuit',
-    img: 'https://images.openfoodfacts.org/images/products/800/050/031/0427/front_it.108.400.jpg',
+    name: 'Lista 3',
+    color: '#7497EF',
     code: '003',
   },
   {
-    name: 'Noir',
-    img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
+    name: 'Lista 4',
+    color: '#f9df9f',
     code: '004',
   },
 ];
-const CRONOLOGY = [
-  {
-    name: 'Nutella',
-    img: 'https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.427.400.jpg',
-    code: '001',
-  },
-  {
-    name: 'Acqua',
-    img: 'https://images.openfoodfacts.org/images/products/327/408/000/5003/front_it.558.full.jpg',
-    code: '002',
-  },
-  {
-    name: 'Nutella Biscuit',
-    img: 'https://images.openfoodfacts.org/images/products/544/900/021/4911/front_fr.145.200.jpg',
-    code: '003',
-  },
-  {
-    name: 'Noir',
-    img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
-    code: '004',
-  },
-  {
-    name: 'Nutella',
-    img: 'https://images.openfoodfacts.org/images/products/807/680/954/5396/front_de.206.400.jpg',
-    code: '00113434',
-  },
-  {
-    name: 'Acqua',
-    img: 'https://images.openfoodfacts.org/images/products/800/511/000/1550/front_it.3.400.jpg',
-    code: '002142123',
-  },
-  {
-    name: 'Nutella Biscuit',
-    img: 'https://images.openfoodfacts.org/images/products/800/166/512/7493/front_it.20.400.jpg',
-    code: '001231233',
-  },
-  {
-    name: 'Noir',
-    img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
-    code: '0045324141324',
-  },
-  {
-    name: 'Nutella',
-    img: 'https://images.openfoodfacts.org/images/products/301/762/042/5035/front_fr.427.400.jpg',
-    code: '00213',
-  },
-  {
-    name: 'Acqua',
-    img: 'https://images.openfoodfacts.org/images/products/327/408/000/5003/front_it.558.full.jpg',
-    code: '002134',
-  },
-  {
-    name: 'Nutella Biscuit',
-    img: 'https://images.openfoodfacts.org/images/products/800/050/031/0427/front_it.108.400.jpg',
-    code: '00312',
-  },
-  {
-    name: 'Noir',
-    img: 'https://images.openfoodfacts.org/images/products/304/692/002/2606/front_it.188.400.jpg',
-    code: '004123',
-  },
-];
+
 
 const Home = ({ navigation }) => {
   const [product, setProduct] = useState({});
@@ -138,19 +77,20 @@ const Home = ({ navigation }) => {
               paddingHorizontal: Globals.css.HorizontalPaddingView,
             }}
           >
-            <Text style={[styles.h1]}>Ultimi Salvati</Text>
+            <Text style={[styles.h1]}>Liste Salvate</Text>
             <View style={{ flex: 4 }}>
               <FlatList
                 horizontal={true}
                 data={SAVED}
                 renderItem={LastSavedCard}
                 keyExtractor={(item) => item.code}
+                showsHorizontalScrollIndicator={false}              
               />
             </View>
           </View>
           <View
             style={{
-              flex: 12,
+              flex: 20,
               flexDirection: 'column',
               paddingHorizontal: Globals.css.HorizontalPaddingView,
             }}
@@ -187,7 +127,6 @@ const styles = StyleSheet.create({
   title: { fontSize: 40, fontWeight: 'bold' },
   h1: { fontSize: 20, flex: 1 },
   lastSaveCardStyle: {
-    width: 150,
     flex: 1,
     flexDirection: 'column',
     margin: 5,

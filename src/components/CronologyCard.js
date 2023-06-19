@@ -106,6 +106,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     alignSelf: 'center',
+    //ombre
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+
+    },
   },
   imageView: {
     borderRadius: 8,
