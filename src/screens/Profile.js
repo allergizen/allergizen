@@ -10,69 +10,73 @@ import {
 } from 'react-native';
 import React from 'react';
 
-import { IconButton } from "@react-native-material/core";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import Dialog from "react-native-dialog";
+import { IconButton } from '@react-native-material/core';
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import Dialog from 'react-native-dialog';
 
 import Colors from '../components/Colors';
 import Globals from '../assets/Globals';
 import ProfileLinkScreenCard from '../components/ProfileLinkScreenCard';
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDoc, doc } from "firebase/firestore/lite";
-import { KEY, AD, PRID, STBU, MSI, AI, _UID } from "@env";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
-import { app } from "./Login";
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDoc, doc } from 'firebase/firestore/lite';
+import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { app } from './Login';
+import { useContext, useState, useEffect } from 'react';
+import { Context, Provider } from '../assets/Context';
+
 const firebaseConfig = {
-  apiKey: KEY,
-  authDomain: AD,
-  projectId: PRID,
-  storageBucket: STBU,
-  messagingSenderId: MSI,
-  appId: AI,
+   apiKey: KEY,
+   authDomain: AD,
+   projectId: PRID,
+   storageBucket: STBU,
+   messagingSenderId: MSI,
+   appId: AI,
 };
 
 // const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const uid = _UID;
 var readed = false;
 var DATA = [];
 
-
-
 const Profile = () => {
+   const { UID } = useContext(Context);
 
    const addAllergia = async (allergia) => {
-      await setDoc(doc(db, "users", uid), {
-         allergie: {
-            [allergia]: true
-         }
-      }, { merge: true });
-      
-   }
-   
-   const removeAllergia = async (allergia) => {
-      await setDoc(doc(db, "users", uid), {
-         allergie: {
-            [allergia]: false
-         }
-      }, { merge: true });
-   }
+      await setDoc(
+         doc(db, 'users', UID),
+         {
+            allergie: {
+               [allergia]: true,
+            },
+         },
+         { merge: true },
+      );
+   };
 
-   
-   var [name, setName] = React.useState("nome");
-   var [email, setEmail] = React.useState("email@example.it");
+   const removeAllergia = async (allergia) => {
+      await setDoc(
+         doc(db, 'users', UID),
+         {
+            allergie: {
+               [allergia]: false,
+            },
+         },
+         { merge: true },
+      );
+   };
+
+   var [name, setName] = React.useState('nome');
+   var [email, setEmail] = React.useState('email@example.it');
    async function getInfo() {
-      if (readed)
-         return;
+      if (readed) return;
       readed = true;
-      var query = await getDoc(doc(db, "users", uid));
+      var query = await getDoc(doc(db, 'users', UID));
       setName(query.data().nome);
       setEmail(query.data().email);
       Object.keys(query.data().allergie).forEach((key) => {
-         if (key == "Anidridesolforosa")
-            key = "Anidride solforosa";
-         if (key == "Fruttaaguscio")
-            key = "Frutta a guscio";
+         if (key == 'Anidridesolforosa') key = 'Anidride solforosa';
+         if (key == 'Fruttaaguscio') key = 'Frutta a guscio';
          DATA.push({ allergia: key, state: query.data().allergie[key] });
       });
    }
@@ -85,18 +89,23 @@ const Profile = () => {
                <Text style={styles.cardTitle}>{name}</Text>
             </View>
             <View style={{ flex: 1 }}>
-                  {state ? 
-                  (<IconButton
-                     icon={props => <Icon name="close" {...props} />}
-                     color="red" onPress={() => {
+               {state ? (
+                  <IconButton
+                     icon={(props) => <Icon name='close' {...props} />}
+                     color='red'
+                     onPress={() => {
                         //removeAllergia(name);
                      }}
-                  />) :(<IconButton
-                     icon={props => <Icon name="plus" {...props} />}
-                     color="green" onPress={() => {
+                  />
+               ) : (
+                  <IconButton
+                     icon={(props) => <Icon name='plus' {...props} />}
+                     color='green'
+                     onPress={() => {
                         //addAllergia(name);
                      }}
-                  />) }
+                  />
+               )}
             </View>
          </View>
       </View>
@@ -106,7 +115,7 @@ const Profile = () => {
    const showDialog = () => {
       setVisible(true);
    };
-  
+
    const handleCancel = () => {
       setVisible(false);
    };
@@ -124,20 +133,20 @@ const Profile = () => {
    }
    //<Dialog.input label="Nome"></Dialog.input>
    //<Dialog.input label="Email"></Dialog.input>
+
    return (
       <SafeAreaView style={styles.screen}>
-
          <Dialog.Container visible={visible}>
             <Dialog.Title>Modifica account</Dialog.Title>
 
-            <Dialog.Button label="Annulla" onPress={handleCancel}/>
-            <Dialog.Button label="Conferma" onPress={confirmChanges}/>
+            <Dialog.Button label='Annulla' onPress={handleCancel} />
+            <Dialog.Button label='Conferma' onPress={confirmChanges} />
          </Dialog.Container>
 
          <View style={styles.profile}>
             <Text style={styles.title}>Profile</Text>
          </View>
-         
+
          <View style={{ flex: 10, marginTop: 30 }}>
             <View style={styles.info}>
                <View style={styles.infoView}>
@@ -150,8 +159,8 @@ const Profile = () => {
                      }}>
                      <Text style={[styles.h1]}>{name}</Text>
                      <Text style={[styles.text]}>{email}</Text>
-                     <TouchableOpacity style={styles.buttonStyle}>
-                        <Text style={{ fontWeight: 500 }} onPress={showDialog}>Modifica</Text>
+                     <TouchableOpacity onPress={showDialog} style={styles.buttonStyle}>
+                        <Text style={{ fontWeight: 500 }}>Modifica</Text>
                      </TouchableOpacity>
                   </View>
                </View>
@@ -159,35 +168,32 @@ const Profile = () => {
             <View style={styles.screenLink}>
                <Text style={styles.subtitle}>Allergeni</Text>
 
-                  <FlatList
-                     data={DATA}
-                     renderItem={({ item }) => (
-                        <Item name={item.allergia} state={item.state} />
-                     )}
-                  />
+               <FlatList
+                  data={DATA}
+                  renderItem={({ item }) => <Item name={item.allergia} state={item.state} />}
+               />
             </View>
-
          </View>
       </SafeAreaView>
    );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    flexDirection: "column",
-  },
-  profile: {
-    justifyContent: "flex-end",
-    paddingHorizontal: Globals.css.HorizontalPaddingView,
-    flex: 1,
-  },
+   screen: {
+      flex: 1,
+      flexDirection: 'column',
+   },
+   profile: {
+      justifyContent: 'flex-end',
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
+      flex: 1,
+   },
 
-  info: {
-    justifyContent: "flex-end",
-    paddingHorizontal: Globals.css.HorizontalPaddingView / 2,
-    flex: 2,
-  },
+   info: {
+      justifyContent: 'flex-end',
+      paddingHorizontal: Globals.css.HorizontalPaddingView / 2,
+      flex: 2,
+   },
 
    info: {
       justifyContent: 'flex-end',

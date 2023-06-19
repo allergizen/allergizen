@@ -101,9 +101,10 @@ const CRONOLOGY = [
    },
 ];
 
-const Home = () => {
+const Home = ({ navigation }) => {
    const [product, setProduct] = useState({});
    const { scanned } = useContext(Context);
+
    // const scanned = '';
 
    useEffect(() => {
