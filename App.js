@@ -13,24 +13,12 @@ import TabBar from './src/components/TabBar';
 const Stack = createStackNavigator();
 
 export default function App() {
-   const [userToken, setUserToken] = React.useState('asduiahduiw');
-
-   // React.useEffect(() => {
-   //   // Verifica se l'utente è già autenticato e imposta il token
-   //   // const checkUserToken = () => {
-   //   //   const token = setUserToken(token); // Recupera il token di autenticazione dall'archiviazione o da altro luogo;
-   //   // };
-   //   // checkUserToken();
-   // }, []);
-
    return (
       <>
          <Provider>
             <NavigationContainer>
                <Stack.Navigator
-                  initialRouteName={
-                     userToken ? (userToken.length > 0 ? 'TabBar' : 'Login') : 'Login'
-                  }
+                  initialRouteName={'Login'}
                   screenOptions={() => ({
                      headerShown: false,
                   })}>

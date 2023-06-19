@@ -101,10 +101,11 @@ const CRONOLOGY = [
    },
 ];
 
-const Home = () => {
-  const [product, setProduct] = useState({});
-  const { scanned } = useContext(Context);
-  // const scanned = '';
+const Home = ({ navigation }) => {
+   const [product, setProduct] = useState({});
+   const { scanned } = useContext(Context);
+
+   // const scanned = '';
 
   useEffect(() => {
     // Funzione che viene chiamata quando il valore di scanned cambia
