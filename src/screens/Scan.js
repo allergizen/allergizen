@@ -21,7 +21,7 @@ import * as Animatable from 'react-native-animatable';
 import Svg, { Path, SvgUri } from 'react-native-svg';
 import { Shadow } from 'react-native-shadow-2';
 
-import { ScanContext, ScanProvider } from '../assets/ScanContext.js';
+import { ScanContext, ScanProvider } from '../assets/Context.js';
 
 import { CrossIcon, CheckIcon, QuestionIcon } from '../assets/svgIcons.js';
 
@@ -164,6 +164,7 @@ export default function App() {
             console.log(item);
             if (res.status === 0) {
                setScanned(false);
+               iuokjn;
                cameraRef.current.resumePreview();
                setSnapAnim(null);
                return;
