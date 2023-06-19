@@ -4,7 +4,7 @@ const Colors = {
    buttonsColor: '#f9df9f',
    idk: '#daaf53',
    red: '#ed6160',
-   lightGreen: '#dfebcb',
+   lightGreen: '#DFEBCB',
    green: '#8cc36a',
    background: '#f2f2f2',
    profileScreenCard: '#e2e2e2',

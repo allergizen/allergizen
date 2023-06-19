@@ -26,6 +26,8 @@ import { Context, Provider } from '../assets/Context.js';
 
 import { CrossIcon, CheckIcon, QuestionIcon } from '../assets/svgIcons.js';
 
+import * as SecureStore from 'expo-secure-store';
+
 const AnimatableScrollView = Animatable.createAnimatableComponent(ScrollView);
 import {
    storeDataJSON,
@@ -177,7 +179,11 @@ export default function App() {
             });
 
             setDati(res);
-            setSnapAnim({ 0: { top: screenHeight }, 1: { top: 0.1 * screenHeight } });
+
+            setSnapAnim({
+               0: { top: screenHeight },
+               1: { top: 0.1 * screenHeight },
+            });
             setResultY(0.1 * screenHeight);
          })
          .catch(() => {
@@ -186,6 +192,10 @@ export default function App() {
             setSnapAnim(null);
          });
    };
+
+   //   async function save(key, value) {
+   //     await SecureStore.setItemAsync(key, value);
+   //   }
 
    const handleStartDrag = (e) => {
       setStartPos(e.nativeEvent.pageY);

@@ -1,75 +1,120 @@
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
 import { React, useState } from 'react';
-import { IconButton } from "@react-native-material/core";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-
+import { IconButton } from '@react-native-material/core';
 import Colors from './Colors';
-const CronologyCard = ({ item }) => {
-   fetch(item.img).then((res) => res.blob().then());
-   return (
-      <View style={styles.cronologyCardStyle}>
-         <View
-            style={{
-               padding: 0,
-               borderRadius: 10,
-               borderWidth: 0,
-               borderColor: '#fff',
-               overflow: 'hidden',
-               maxHeight: 150,
-            }}>
-            <ImageBackground source={{ uri: item.img }} style={styles.imageBackground} />
-         </View>
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import api from '../api/api';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-         <View style={{ flex: 2, alignSelf: 'center', alignContent: 'center', padding: 5}}>
-            <Text style={{ alignSelf: 'center', fontSize: 25 }}>{item.name}</Text>
-            <Text style={{ alignSelf: 'center', fontSize: 17 }}>Kellog's</Text>
-            <View style={{ flexDirection: 'row' }}>
-               <View style={{ flex: 3 }}>
-                  <Text style={{fontSize: 20}}>Allergeni rilevati</Text>
-               </View>
-               <View style={{ flex: 1 }}>
-                  < IconButton
-                     icon={props => <Icon name="plus" {...props} />}
-                     color="green" onPress={() => {
-                        
-                     }}
-                  />               
-               </View>
-            </View>
-         </View>
+const CronologyCard = ({ item }) => {
+  fetch(item.img).then((res) => res.blob().then());
+  const numAll = api.get_allergens(item.allergens).length;
+
+  return (
+    <View
+      style={[
+        styles.cronologyCardStyle,
+        numAll === 0
+          ? styles.noAllergy
+          : numAll === 1
+          ? styles.allergy
+          : styles.undefinedAllergy,
+      ]}
+    >
+      <View
+        style={{
+          borderTopLeftRadius: 25,
+          borderBottomLeftRadius: 25,
+          overflow: 'hidden',
+          maxHeight: 125,
+          flex: 1,
+        }}
+      >
+        <ImageBackground
+          source={{ uri: item.img }}
+          style={styles.imageBackground}
+        />
       </View>
-   );
+
+      <View style={{ flex: 2, padding: 5, marginLeft: 15 }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            textAlignVertical: 'center',
+          }}
+        >
+          <Text style={{ fontSize: 25, lineHeight: 30 }}>
+            {item.product_name.length > 16
+              ? item.product_name.slice(0, 16) + '...'
+              : item.product_name
+            }
+          </Text>
+          <Text style={{ fontSize: 15, lineHeight: 20 }}>{item.brand}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              marginTop: 5,
+            }}
+          >
+            {numAll > 0 ? (
+              <MaterialCommunityIcons
+                name='close-circle'
+                color={'#000'}
+                size={26}
+              />
+            ) : (
+              <MaterialCommunityIcons
+                name='check-circle'
+                color={'#000'}
+                size={26}
+              />
+            )}
+            <Text style={{ fontSize: 12, marginLeft: 5 }}>
+              {item.allergens
+                ? item.allergens.join(', ')
+                : 'Non ci sono allergie'}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-   cronologyCardStyle: {
-      width: '90%',
-      height: 200,
-      flex: 1,
-      flexDirection: 'row',
-      margin: 5,
-      borderRadius: 25,
-      padding: 5,
-      backgroundColor: '#fff',
-      alignItems: 'space-around',
-      justifyContent: 'space-around',
-      alignSelf: 'center',
-   },
-   imageView: {
-      borderRadius: 8,
-      flex: 2,
-   },
-   imageBackground: {
-      // height: '90%',
-      borderRadius: 5,
-      flex: 1,
-      // width: 50,
-      width: '100%',
-      // height: '100%',
-      aspectRatio: 0.7,
-      resizeMode: 'cover',
-      margin: -1,
-   },
+  allergy: {
+    backgroundColor: Colors.red,
+  },
+
+  noAllergy: {
+    backgroundColor: Colors.lightGreen,
+  },
+
+  undefinedAllergy: {
+    backgroundColor: Colors.idk,
+  },
+  cronologyCardStyle: {
+    height: 125,
+    flex: 1,
+    flexDirection: 'row',
+    margin: 5,
+    borderRadius: 25,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    alignSelf: 'center',
+  },
+  imageView: {
+    borderRadius: 8,
+    flex: 2,
+  },
+  imageBackground: {
+    height: '100%',
+    resizeMode: 'cover',
+  },
 });
 
 export default CronologyCard;

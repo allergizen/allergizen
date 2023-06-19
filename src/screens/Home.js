@@ -129,38 +129,38 @@ const Home = ({ navigation }) => {
             <View style={styles.welcomeView}>
                <Text style={[styles.title]}>Bentornato!</Text>
             </View>
-            <View style={styles.productArea}>
-               <View
-                  style={{
-                     flex: 6,
-                     flexDirection: 'column',
-                     paddingHorizontal: Globals.css.HorizontalPaddingView,
-                  }}>
-                  <Text style={[styles.h1]}>Ultimi Salvati</Text>
-                  <View style={{ flex: 4 }}>
-                     <FlatList
-                        horizontal={true}
-                        data={SAVED}
-                        renderItem={LastSavedCard}
-                        keyExtractor={(item) => item.code}
-                     />
-                  </View>
+         </View>
+         <View style={styles.productArea}>
+            <View
+               style={{
+                  flex: 6,
+                  flexDirection: 'column',
+                  paddingHorizontal: Globals.css.HorizontalPaddingView,
+               }}>
+               <Text style={[styles.h1]}>Ultimi Salvati</Text>
+               <View style={{ flex: 4 }}>
+                  <FlatList
+                     horizontal={true}
+                     data={SAVED}
+                     renderItem={LastSavedCard}
+                     keyExtractor={(item) => item.code}
+                  />
                </View>
-               <View
-                  style={{
-                     flex: 12,
-                     flexDirection: 'column',
-                     paddingHorizontal: Globals.css.HorizontalPaddingView,
-                  }}>
-                  <Text style={[styles.h1]}>Cronologia</Text>
-                  <View style={{ flex: 8 }}>
-                     <FlatList
-                        horizontal={false}
-                        data={product}
-                        renderItem={CronologyCard}
-                        keyExtractor={(item) => item.code}
-                     />
-                  </View>
+            </View>
+            <View
+               style={{
+                  flex: 12,
+                  flexDirection: 'column',
+                  paddingHorizontal: Globals.css.HorizontalPaddingView,
+               }}>
+               <Text style={[styles.h1]}>Cronologia</Text>
+               <View style={{ flex: 8 }}>
+                  <FlatList
+                     horizontal={false}
+                     data={product}
+                     renderItem={CronologyCard}
+                     keyExtractor={(item) => item.code}
+                  />
                </View>
             </View>
          </View>
@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
    screen: {
       flex: 1,
       flexDirection: 'column',
-      backgroundColor: Colors.background,
    },
    welcomeView: {
       flex: 2,
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
    productArea: {
       flex: 10,
    },
-   title: { fontSize: 40 },
+   title: { fontSize: 40, fontWeight: 'bold' },
    h1: { fontSize: 20, flex: 1 },
    lastSaveCardStyle: {
       width: 150,
