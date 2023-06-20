@@ -290,14 +290,18 @@ export default function App() {
     return <Text>No access to camera</Text>;
   }
 
-  function addFavourite(code) {
+  function addFavourite(code, name, img, brand) {
     if(code == null) return;
     var curUID = getAuth().currentUser.uid;
     setDoc(
       doc(db, 'users', curUID),
       {
           favourites: {
-              [code]: true
+              [code]: {
+                name: name,
+                img: img,
+                brand: brand,
+              },
           }
       },
       { merge: true },
@@ -416,7 +420,7 @@ export default function App() {
 
                   <TouchableOpacity
                     style={styles.savebutton}
-                    onPress={addFavourite(dati.product.code)}
+                    onPress={addFavourite(dati.product.code, dati.product.product_name, dati.product.image_url, dati.product.brands)}
                   >
                     <AddIcon></AddIcon>
                     <Text>Aggiungi ai salvati</Text>
