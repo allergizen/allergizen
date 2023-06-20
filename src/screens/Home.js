@@ -44,8 +44,6 @@ const Home = ({ navigation }) => {
   const [product, setProduct] = useState({});
   const { scanned } = useContext(Context);
 
-  // const scanned = '';
-
   useEffect(() => {
     // Funzione che viene chiamata quando il valore di scanned cambia
     const handleScannedChange = (newValue) => {
@@ -62,32 +60,14 @@ const Home = ({ navigation }) => {
       handleScannedChange(scanned);
     }
   }, [scanned]);
-  //getItem().then((res) => console.log('HOME: ' + res));
   return (
+    
     <Provider>
       <View style={styles.screen}>
         <View style={styles.welcomeView}>
           <Text style={[styles.title]}>Bentornato!</Text>
         </View>
         <View style={styles.productArea}>
-          <View
-            style={{
-              flex: 6,
-              flexDirection: 'column',
-              paddingHorizontal: Globals.css.HorizontalPaddingView,
-            }}
-          >
-            <Text style={[styles.h1]}>Liste Salvate</Text>
-            <View style={{ flex: 4 }}>
-              <FlatList
-                horizontal={true}
-                data={SAVED}
-                renderItem={LastSavedCard}
-                keyExtractor={(item) => item.code}
-                showsHorizontalScrollIndicator={false}              
-              />
-            </View>
-          </View>
           <View
             style={{
               flex: 20,

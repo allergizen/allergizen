@@ -14,6 +14,9 @@ import { Camera, CameraType } from 'expo-camera';
 import api from '../api/api.js';
 import { useFocusEffect } from '@react-navigation/native';
 
+import Colors_ from '../components/Colors';
+
+
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 const { getItem, setItem } = useAsyncStorage('productHistory');
 
@@ -44,6 +47,25 @@ const nutriColor = {
   e: { color: '#EB5757', text: 'grave' },
   unknown: { color: '#4F4F4F', text: 'non trovata' },
 };
+
+import {getAuth} from 'firebase/auth';
+import { initializeApp} from 'firebase/app';
+import { getFirestore, collection, setDoc, doc, FieldValue} from 'firebase/firestore/lite';
+
+import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
+import { Colors } from 'react-native-paper';
+
+const firebaseConfig = {
+   apiKey: KEY,
+   authDomain: AD,
+   projectId: PRID,
+   storageBucket: STBU,
+   messagingSenderId: MSI,
+   appId: AI,
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app)
 
 const ScanBorderTopLeft = (props) => (
   <Svg
@@ -135,7 +157,6 @@ export default function App() {
   const [resultY, setResultY] = useState(screenHeight);
   const [startPos, setStartPos] = useState(null);
   const [snapAnim, setSnapAnim] = useState(null);
-
   const cameraRef = useRef();
 
   useFocusEffect(() => {
@@ -269,6 +290,20 @@ export default function App() {
     return <Text>No access to camera</Text>;
   }
 
+  function addFavourite(code) {
+    if(code == null) return;
+    var curUID = getAuth().currentUser.uid;
+    setDoc(
+      doc(db, 'users', curUID),
+      {
+          favourites: {
+              [code]: true
+          }
+      },
+      { merge: true },
+   );
+  }
+
   return (
     <Provider>
       <View style={[styles.container, { backgroundColor: 'black' }]}>
@@ -364,7 +399,7 @@ export default function App() {
                 <View style={styles.info}>
                   <Text
                     style={{
-                      fontSize: 40,
+                      fontSize: 30,
                       fontWeight: 'bold',
                       marginBottom: -5,
                       width: '80%',
@@ -376,38 +411,40 @@ export default function App() {
                   <Text style={{ fontSize: 25, color: 'gray' }}>
                     {dati.product.brands}
                   </Text>
+                  
                   <Shadow offset={[4, 10]}>
-                    <View style={styles.resultview}>
+
+                  <TouchableOpacity
+                    style={styles.savebutton}
+                    onPress={addFavourite(dati.product.code)}
+                  >
+                    <AddIcon></AddIcon>
+                    <Text>Aggiungi ai salvati</Text>
+                  </TouchableOpacity>
+                  </Shadow>
+                </View>
+              </View>
+                    <View style={styles.resultview}
+                      backgroundColor={api.get_allergens(dati.product.allergens).length != 0 ? Colors_.lightRed : api.get_allergens(dati.product.traces).length === 0 ? Colors_.lightGreen : Colors_.buttonsColor}
+                    >
                       {api.get_allergens(dati.product.allergens).length != 0 ? (
                         <>
                           <CrossIcon></CrossIcon>
-                          <Text>Allergie rilevate</Text>
+                          <Text style={styles.resultText}>Allergie rilevate</Text>
                         </>
                       ) : api.get_allergens(dati.product.traces).length ===
                         0 ? (
                         <>
                           <CheckIcon></CheckIcon>
-                          <Text>Allergie non rilevate</Text>
+                          <Text style={styles.resultText}>Allergie non rilevate</Text>
                         </>
                       ) : (
                         <>
                           <QuestionIcon></QuestionIcon>
-                          <Text>Possibili allergie</Text>
+                          <Text style={styles.resultText}>Possibili allergie</Text>
                         </>
                       )}
                     </View>
-                  </Shadow>
-
-                  <TouchableOpacity
-                    style={styles.savebutton}
-                    onPress={() => alert('Aggiunto ai preferiti!')}
-                  >
-                    <AddIcon></AddIcon>
-                    <Text>Aggiungi ai preferiti</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-
               <Text style={styles.infoHeader}>Allergeni</Text>
               <Text style={styles.infoContent}>
                 {scriviAllergeni(dati.product.allergens, 'red') ??
@@ -456,7 +493,7 @@ export default function App() {
                       : '?'}
                   </Text>
                   <Text>
-                    {'Qualità nutrizionale ' +
+                    {'Qualità nutrizionale\n ' +
                       nutriColor[dati.product.nutrition_grades ?? 'unknown']
                         .text}
                   </Text>
@@ -569,22 +606,28 @@ const styles = StyleSheet.create({
     width: 190,
   },
   resultview: {
-    width: 175,
-    height: 35,
+    width: "100%",
+    height: 70,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
+    justifyContent: 'center',
     borderRadius: 10,
     marginHorizontal: 5,
     gap: 5,
     paddingHorizontal: 5,
     marginTop: 10,
   },
+  resultText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+  },
   savebutton: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
     width: 175,
     height: 35,
-    backgroundColor: 'white',
     marginHorizontal: 5,
     marginTop: 10,
     display: 'flex',
