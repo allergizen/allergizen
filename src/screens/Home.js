@@ -40,7 +40,7 @@ const SAVED = [
 ];
 
 
-const Home = ({ navigation }) => {
+const Home = () => {
   const [product, setProduct] = useState({});
   const { scanned } = useContext(Context);
 
