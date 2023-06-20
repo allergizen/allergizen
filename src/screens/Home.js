@@ -39,7 +39,8 @@ const SAVED = [
   },
 ];
 
-const Home = ({ navigation }) => {
+
+const Home = () => {
   const [product, setProduct] = useState({});
   const { scanned } = useContext(Context);
 
@@ -55,7 +56,6 @@ const Home = ({ navigation }) => {
           setProduct(data);
         });
       }, 1000);
-      console.log(product);
     }; // Sottoscrivi all'evento di cambio di scanned
     if (scanned) {
       handleScannedChange(scanned);
@@ -83,7 +83,7 @@ const Home = ({ navigation }) => {
                 data={SAVED}
                 renderItem={LastSavedCard}
                 keyExtractor={(item) => item.code}
-                showsHorizontalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}              
               />
             </View>
           </View>
@@ -119,10 +119,6 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     paddingHorizontal: Globals.css.HorizontalPaddingView,
-    backgroundColor: Colors.green,
-    borderBottomEndRadius: 40,
-    borderBottomStartRadius: 40,
-    marginBottom: 20,
   },
   productArea: {
     flex: 10,
