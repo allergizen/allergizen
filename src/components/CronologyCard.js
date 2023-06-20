@@ -5,6 +5,7 @@ import Colors from './Colors';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import api from '../api/api';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import 'react-native-gesture-handler';
 
 const CronologyCard = ({ item }) => {
   fetch(item.img).then((res) => res.blob().then());
@@ -14,11 +15,14 @@ const CronologyCard = ({ item }) => {
     <View
       style={[
         styles.cronologyCardStyle,
-        numAll === 0
-          ? styles.noAllergy
-          : numAll === 1
-            ? styles.allergy
-            : styles.undefinedAllergy,
+        api.get_allergens(item.allergens).length &&
+        api.get_allergens(item.traces).length
+          ? styles.allergy
+          : api.get_allergens(item.allergens).length
+          ? styles.allergy
+          : api.get_allergens(item.traces).length
+          ? styles.undefinedAllergy
+          : styles.noAllergy,
       ]}
     >
       <View
@@ -76,20 +80,20 @@ const CronologyCard = ({ item }) => {
               onPress={() =>
                 console.log(
                   'item.allergens' +
-                  Boolean(item.allergens) +
-                  '   item.traces' +
-                  item.traces
+                    Boolean(item.allergens) +
+                    '   item.traces' +
+                    item.traces
                 )
               }
             >
               {api.get_allergens(item.allergens).length &&
-                api.get_allergens(item.traces).length
+              api.get_allergens(item.traces).length
                 ? 'Rilevati allergeni e tracce'
                 : api.get_allergens(item.allergens).length
-                  ? 'Rilevati allergeni'
-                  : api.get_allergens(item.traces).length
-                    ? 'Rilevate tracce'
-                    : 'Allergeni non presenti'}
+                ? 'Rilevati allergeni'
+                : api.get_allergens(item.traces).length
+                ? 'Rilevate tracce'
+                : 'Allergeni non presenti'}
             </Text>
           </View>
         </View>
@@ -138,4 +142,3 @@ const styles = StyleSheet.create({
 });
 
 export default CronologyCard;
-
