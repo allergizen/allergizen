@@ -74,7 +74,7 @@ const CronologyCard = ({ item }) => {
             )}
             <Text style={{ fontSize: 12, marginLeft: 5 }}>
               {item.allergens
-                ? item.allergens.join(', ')
+                ? api.get_allergens(item.allergens).join(', ')
                 : 'Non ci sono allergie'}
             </Text>
           </View>
