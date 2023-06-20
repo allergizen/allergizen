@@ -71,11 +71,6 @@ export default Login = ({ navigation }) => {
    const handleSignupButtonNavigation = () => {
       navigation.navigate('Signup');
    };
-
-   const handleForgotPasspButtonNavigation = () => {
-      navigation.navigate('ForgotPassword');
-   };
-
    return (
       <Provider>
          <KeyboardAvoidingView
@@ -101,11 +96,6 @@ export default Login = ({ navigation }) => {
                   onChangeText={(password) => setPassword(password)}
                />
             </View>
-            <TouchableOpacity onPress={() => {}} style={styles.forgotContainer}>
-               <Text style={styles.textAsBtn} onPress={handleForgotPasspButtonNavigation}>
-                  Forgot password?
-               </Text>
-            </TouchableOpacity>
             <View style={styles.buttonContainer}>
                <TouchableOpacity onPress={handleLogin} style={styles.button}>
                   <Text style={styles.buttonText}>Login</Text>
@@ -152,10 +142,6 @@ const styles = StyleSheet.create({
       color: '#DAAF53',
       fontWeight: 'bold',
       textAlign: 'right',
-   },
-
-   forgotContainer: {
-      marginTop: 10,
    },
    text: {
       fontWeight: 'normal',
