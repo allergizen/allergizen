@@ -10,11 +10,10 @@ import LastSavedCard from '../components/LastSavedCard';
 import CronologyCard from '../components/CronologyCard.js';
 import { Tab } from '@rneui/base';
 
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
+import AsyncStorage, { useAsyncStorage } from '@react-native-async-storage/async-storage';
+const { getItem, setItem } = useAsyncStorage('abc');
 
 import { Provider, Context } from '../assets/Context';
-
-const { getItem, setItem } = useAsyncStorage('productHistory');
 
 const SAVED = [
    {
@@ -102,7 +101,7 @@ const CRONOLOGY = [
 ];
 
 const Home = ({ navigation }) => {
-   const [product, setProduct] = useState({});
+   const [product, setProduct] = useState([]);
    const { scanned } = useContext(Context);
 
    // const scanned = '';
@@ -113,11 +112,11 @@ const Home = ({ navigation }) => {
          setTimeout(() => {
             getItem().then((res) => {
                const data = JSON.parse(res.toString());
-
+               console.log('DATA ', res);
                setProduct(data);
             });
          }, 1000);
-      }; // Sottoscrivi all'evento di cambio di scanned
+      };
       if (scanned) {
          handleScannedChange(scanned);
       }

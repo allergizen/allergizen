@@ -16,7 +16,7 @@ import api from '../api/api.js';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-const { getItem, setItem, mergeItem } = useAsyncStorage('productHistory');
+const { getItem, setItem, mergeItem } = useAsyncStorage('abc');
 
 import * as Animatable from 'react-native-animatable';
 import Svg, { Path, SvgUri } from 'react-native-svg';
@@ -119,20 +119,23 @@ const AddIcon = (props) => (
       />
    </Svg>
 );
-
+function extend(a, b) {
+   for (var key in b) if (b.hasOwnProperty(key)) a[key] = b[key];
+   return a;
+}
 export default function App() {
-   const screenHeight = Dimensions.get('screen').height;
-
    const [hasPermission, setHasPermission] = useState(null);
    const { scanned, setScanned } = useContext(Context);
    const [dati, setDati] = useState(null);
-
    const [cameraStatus, setCameraStatus] = useState(false);
    const [resultY, setResultY] = useState(screenHeight);
    const [startPos, setStartPos] = useState(null);
    const [snapAnim, setSnapAnim] = useState(null);
+   const [productScanned, setProductScanned] = useState([]);
 
+   const screenHeight = Dimensions.get('screen').height;
    const cameraRef = useRef();
+   setItem(JSON.stringify(productScanned));
 
    useFocusEffect(() => {
       setCameraStatus(true);
@@ -163,6 +166,7 @@ export default function App() {
                product_name: res.product.product_name,
                img: res.product.image_front_url,
                code: res.code,
+               allergens: res.product.allergens,
             };
 
             if (res.status === 0) {
@@ -172,11 +176,27 @@ export default function App() {
                setSnapAnim(null);
                return;
             }
-            getItem().then((res) => {
-               res = JSON.parse(res).push(item);
-               console.log('risposta ' + JSON.stringify(res));
-               // setItem();
-            });
+            // getItem()
+            //    .then((res) => {
+            //       res = JSON.parse(res);
+            //       console.log(JSON.stringify(res));
+            //       setProductScanned(res.push(item));
+
+            //       // console.log('risposta ' + JSON.stringify(productScanned));
+            //       // console.log('JSON: ',res);
+            //    })
+            //    .catch((e) => {
+            //       console.log('AsyncStorage: ', e);
+            //    });
+            console.log('PRIMA: ', productScanned);
+            setProductScanned(productScanned.push(item));
+            console.log('ProductScanned ', productScanned);
+
+            setItem(JSON.stringify(productScanned))
+               .then(() => console.log('SetAsyncStorage ', productScanned))
+               .catch((e) => {
+                  console.log('ERROE SETITEM: ', e);
+               });
 
             setDati(res);
 
