@@ -13,30 +13,32 @@ import TabBar from './src/components/TabBar';
 const Stack = createStackNavigator();
 
 export default function App() {
-   return (
-      <>
-         <Provider>
-            <NavigationContainer>
-               <Stack.Navigator
-                  initialRouteName={'Login'}
-                  screenOptions={() => ({
-                     headerShown: false,
-                  })}>
-                  <Stack.Screen name='Login' component={Login} />
-                  <Stack.Screen name='Signup' component={Signup} />
-                  <Stack.Screen name='TabBar'>{() => <TabBar />}</Stack.Screen>
-                  <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
-               </Stack.Navigator>
-            </NavigationContainer>
-            <StatusBar style='auto' />
-         </Provider>
-      </>
-   );
+  return (
+    <>
+      <Provider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName={'Login'}
+            screenOptions={() => ({
+              headerShown: false,
+              gestureEnabled: false,
+            })}
+          >
+            <Stack.Screen name='Login' component={Login} />
+            <Stack.Screen name='Signup' component={Signup} />
+            <Stack.Screen name='TabBar'>{() => <TabBar />}</Stack.Screen>
+            <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <StatusBar style='auto' />
+      </Provider>
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-      backgroundColor: '#fff',
-   },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
 });
