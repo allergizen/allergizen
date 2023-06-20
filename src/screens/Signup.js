@@ -174,10 +174,6 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       textAlign: 'right',
    },
-
-   forgotContainer: {
-      marginTop: 10,
-   },
    text: {
       fontWeight: 'normal',
    },

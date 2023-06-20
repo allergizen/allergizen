@@ -5,7 +5,6 @@ import Colors from './Colors';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import api from '../api/api';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import 'react-native-gesture-handler';
 
 const CronologyCard = ({ item }) => {
   fetch(item.img).then((res) => res.blob().then());
@@ -15,14 +14,11 @@ const CronologyCard = ({ item }) => {
     <View
       style={[
         styles.cronologyCardStyle,
-        api.get_allergens(item.allergens).length &&
-        api.get_allergens(item.traces).length
+        numAll === 0
+          ? styles.noAllergy
+          : numAll === 1
           ? styles.allergy
-          : api.get_allergens(item.allergens).length
-          ? styles.allergy
-          : api.get_allergens(item.traces).length
-          ? styles.undefinedAllergy
-          : styles.noAllergy,
+          : styles.undefinedAllergy,
       ]}
     >
       <View
@@ -51,7 +47,8 @@ const CronologyCard = ({ item }) => {
           <Text style={{ fontSize: 25, lineHeight: 30 }}>
             {item.product_name.length > 16
               ? item.product_name.slice(0, 16) + '...'
-              : item.product_name}
+              : item.product_name
+            }
           </Text>
           <Text style={{ fontSize: 15, lineHeight: 20 }}>{item.brand}</Text>
           <View
@@ -75,25 +72,10 @@ const CronologyCard = ({ item }) => {
                 size={26}
               />
             )}
-            <Text
-              style={{ fontSize: 12, marginLeft: 5 }}
-              onPress={() =>
-                console.log(
-                  'item.allergens' +
-                    Boolean(item.allergens) +
-                    '   item.traces' +
-                    item.traces
-                )
-              }
-            >
-              {api.get_allergens(item.allergens).length &&
-              api.get_allergens(item.traces).length
-                ? 'Rilevati allergeni e tracce'
-                : api.get_allergens(item.allergens).length
-                ? 'Rilevati allergeni'
-                : api.get_allergens(item.traces).length
-                ? 'Rilevate tracce'
-                : 'Allergeni non presenti'}
+            <Text style={{ fontSize: 12, marginLeft: 5 }}>
+              {item.allergens
+                ? api.get_allergens(item.allergens).join(', ')
+                : 'Non ci sono allergie'}
             </Text>
           </View>
         </View>
@@ -108,7 +90,7 @@ const styles = StyleSheet.create({
   },
 
   noAllergy: {
-    backgroundColor: Colors.green,
+    backgroundColor: Colors.lightGreen,
   },
 
   undefinedAllergy: {
@@ -129,6 +111,7 @@ const styles = StyleSheet.create({
     shadowOffset: {
       width: 0,
       height: 5,
+
     },
   },
   imageView: {
