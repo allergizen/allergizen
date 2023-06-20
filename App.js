@@ -7,7 +7,6 @@ import { Provider, Context } from './src/assets/Context';
 
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
-import ForgotPassword from './src/screens/ForgotPassword';
 import TabBar from './src/components/TabBar';
 
 const Stack = createStackNavigator();
@@ -25,7 +24,6 @@ export default function App() {
                   <Stack.Screen name='Login' component={Login} />
                   <Stack.Screen name='Signup' component={Signup} />
                   <Stack.Screen name='TabBar'>{() => <TabBar />}</Stack.Screen>
-                  <Stack.Screen name='ForgotPassword' component={ForgotPassword} />
                </Stack.Navigator>
             </NavigationContainer>
             <StatusBar style='auto' />
