@@ -7,6 +7,7 @@ import {
     Dimensions,
     Text,
     ScrollView,
+    BackHandler
 } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Camera, CameraType } from 'expo-camera';
@@ -115,6 +116,7 @@ export default function Scan() {
     const [hasPermission, setHasPermission] = useState(null);
     const { scanned, setScanned } = useContext(Context);
     const [dati, setDati] = useState(null);
+    const [backHandler, setBackHandler] = useState(null)
 
     const [cameraStatus, setCameraStatus] = useState(false);
     const [resultY, setResultY] = useState(screenHeight);
@@ -137,6 +139,21 @@ export default function Scan() {
         getBarCodeScannerPermissions();
     }, []);
 
+    const closeResults = () => {
+        const pos = 1;
+        setScanned(false);
+        if (cameraRef.current) cameraRef.current.resumePreview();
+        setSnapAnim({ 0: { top: resultY }, 1: { top: pos * screenHeight } });
+        setResultY(pos * screenHeight);
+
+        if (backHandler !== null) {
+            backHandler.remove()
+            setBackHandler(null)
+        }
+
+        return true
+    }
+
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
         setDati(null)
@@ -151,12 +168,10 @@ export default function Scan() {
                 brand: res.product.brands,
                 allergens: res.product.allergens,
                 traces: res.product.traces,
-            };
+            };        
 
             if (res.status === 0) {
-                setScanned(false);
-                cameraRef.current.resumePreview();
-                setSnapAnim(null);
+                closeResults()
                 return;
             }
 
@@ -169,12 +184,12 @@ export default function Scan() {
                 1: { top: 0.1 * screenHeight },
             });
 
+            setBackHandler(BackHandler.addEventListener('hardwareBackPress', closeResults))
+
             setResultY(0.1 * screenHeight);
         })
         .catch(() => {
-            setScanned(false);
-            cameraRef.current.resumePreview();
-            setSnapAnim(null);
+            closeResults()
         });
     };
 
@@ -197,15 +212,13 @@ export default function Scan() {
         let pos = resultY / screenHeight;
 
         if (pos > 0.2) {
-            pos = 1;
-            setScanned(false);
-            cameraRef.current.resumePreview();
+            closeResults()
         } else {
             pos = 0.1;
+            setSnapAnim({ 0: { top: resultY }, 1: { top: pos * screenHeight } });
+            setResultY(pos * screenHeight);
         }
 
-        setSnapAnim({ 0: { top: resultY }, 1: { top: pos * screenHeight } });
-        setResultY(pos * screenHeight);
     };
 
     const handleScannedChange = (newValue) => {
@@ -215,7 +228,7 @@ export default function Scan() {
     const scriviAllergeni = (allergens, color) => {
         const allergeni = api.translate_allergens(allergens);
         const userAllergens = api.get_allergens(allergens);
-
+        
         if (allergeni.length === 0) return null;
 
         return (
@@ -256,7 +269,7 @@ export default function Scan() {
                     barCodeTypes={[
                         BarCodeScanner.Constants.BarCodeType.ean13,
                         BarCodeScanner.Constants.BarCodeType.ean8,
-                    ]}
+                    ]}  
                     ref={cameraRef}
                 />
             ) : null}
@@ -310,7 +323,7 @@ export default function Scan() {
         <Animatable.View
             animation={snapAnim}
             style={[styles.result, { top: resultY }]}
-            duration={1000}
+            duration={200}
             onStartShouldSetResponder={handleStartDrag}
             onResponderMove={handleDrag}
             onResponderRelease={handleRelease}
@@ -453,7 +466,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         position: 'absolute',
-        borderRadius: 20,
+        borderRadius: 10,
         width: '100%',
         height: 1000,
         flex: 1,
@@ -467,8 +480,8 @@ const styles = StyleSheet.create({
     },
     dragBar: {
         width: '50%',
-        height: 7,
-        backgroundColor: '#1d1d1f',
+        height: 5,
+        backgroundColor: '#1d1d1f60',
         borderRadius: 10,
     },
     dragHitBox: {
