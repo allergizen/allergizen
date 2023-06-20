@@ -14,11 +14,14 @@ const CronologyCard = ({ item }) => {
     <View
       style={[
         styles.cronologyCardStyle,
-        numAll === 0
-          ? styles.noAllergy
-          : numAll === 1
+        api.get_allergens(item.allergens).length &&
+        api.get_allergens(item.traces).length
           ? styles.allergy
-          : styles.undefinedAllergy,
+          : api.get_allergens(item.allergens).length
+          ? styles.allergy
+          : api.get_allergens(item.traces).length
+          ? styles.undefinedAllergy
+          : styles.noAllergy,
       ]}
     >
       <View
@@ -47,8 +50,7 @@ const CronologyCard = ({ item }) => {
           <Text style={{ fontSize: 25, lineHeight: 30 }}>
             {item.product_name.length > 16
               ? item.product_name.slice(0, 16) + '...'
-              : item.product_name
-            }
+              : item.product_name}
           </Text>
           <Text style={{ fontSize: 15, lineHeight: 20 }}>{item.brand}</Text>
           <View
@@ -73,9 +75,14 @@ const CronologyCard = ({ item }) => {
               />
             )}
             <Text style={{ fontSize: 12, marginLeft: 5 }}>
-              {item.allergens
-                ? api.get_allergens(item.allergens).join(', ')
-                : 'Non ci sono allergie'}
+              {api.get_allergens(item.allergens).length &&
+              api.get_allergens(item.traces).length
+                ? 'Rilevati allergeni e tracce'
+                : api.get_allergens(item.allergens).length
+                ? 'Rilevati allergeni'
+                : api.get_allergens(item.traces).length
+                ? 'Rilevate tracce'
+                : 'Allergeni non presenti'}
             </Text>
           </View>
         </View>
@@ -111,7 +118,6 @@ const styles = StyleSheet.create({
     shadowOffset: {
       width: 0,
       height: 5,
-
     },
   },
   imageView: {
