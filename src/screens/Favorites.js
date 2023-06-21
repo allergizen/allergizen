@@ -1,48 +1,75 @@
 import React from 'react';
+import { useState } from 'react';
+
+import { useContext } from 'react';
+import { Context, Provider } from '../assets/Context';
+
 import Globals from '../assets/Globals.js';
 import Colors from '../components/Colors';
 
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Image } from 'react-native';
 import Profile from './Profile.js';
+import { getFirestore, collection, getDoc, doc } from 'firebase/firestore/lite';
+import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
+import { app } from './Login';
 
-const DATA = [
-   {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97sdfsdfsdf63',
-      image: 'https://images.openfoodfacts.org/images/products/505/382/720/3555/front_it.12.400.jpg',
-      name: 'Special K cioccolato',
-      company: 'Kellog’s',
-   },
-   {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91asdfsdfa97f63',
-      image: 'https://images.openfoodfacts.org/images/products/505/382/720/3555/front_it.12.400.jpg',
 
-      name: 'Special K cioccolato',
-      company: 'Kellog’s',
-   },
-   {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97dfsdff63',
-      image: 'https://images.openfoodfacts.org/images/products/505/382/720/3555/front_it.12.400.jpg',
-      name: 'Special K cioccolato',
-      company: 'Kellog’s',
-   },
-];
+const firebaseConfig = {
+   apiKey: KEY,
+   authDomain: AD,
+   projectId: PRID,
+   storageBucket: STBU,
+   messagingSenderId: MSI,
+   appId: AI,
+};
 
-const Item = ({ title, image, company }) => (
-   //crea una card con immagine a sinistra e titolo e sottotitolo a destra
-   <View style={styles.card}>
-      <View style={{ flexDirection: 'row' }}>
-         <View style={{ flex: 1 }}>
-            <Image source={{ uri: image }} style={{ height: 50, width: 50 }} />
-         </View>
-         <View style={{ flex: 3 }}>
-            <Text style={styles.cardTitle}>{title}</Text>
-            <Text style={styles.cardSubtitle}>{company}</Text>
-         </View>
-      </View>
-   </View>
-);
+// const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+
 
 const Favorites = () => {
+   const [data, setData] = useState([]);
+
+   const { UID } = useContext(Context);
+   var readed = false;
+   async function getSaved() {
+      if (readed) return;
+      var query = await getDoc(doc(db, 'users', UID));
+      const newData = Object.keys(query.data().favourites).map((obj) => ({
+         code: obj,
+         brand: query.data().favourites[obj].brand,
+         img: query.data().favourites[obj].img,
+         name: query.data().favourites[obj].name,
+      }));
+      setData(newData);
+      readed = true;
+   }
+   const Item = ({ name, img, brand, code }) => (
+      <View style={styles.card}>
+         <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 1 }}>
+               <Image source={{ uri: img }} style={{ height: 50, width: 50 }} />
+            </View>
+            <View style={{ flex: 3 }}>
+               <Text style={styles.cardTitle}>{name}</Text>
+               <Text style={styles.cardSubtitle}>{brand}</Text>
+            </View>
+
+         </View>
+      </View>
+   );
+
+
+   if (!readed) {
+      getSaved();
+      var interval = setInterval(() => {
+         if (readed) {
+            clearInterval(interval);
+         }
+      }, 100);
+   }
+
    return (
       <View style={styles.screen}>
          <View stylex={styles.savedView}>
@@ -51,11 +78,12 @@ const Favorites = () => {
          <View style={styles.productArea}>
             <SafeAreaView>
                <FlatList
-                  data={DATA}
-                  renderItem={({ item }) => (
-                     <Item title={item.name} company={item.company} image={item.image} />
-                  )}
-                  keyExtractor={(item) => item.id}
+                  data={data}
+                  renderItem={({ item }) =>
+                     item.name === null ? null : (
+                        <Item name={item.name} brand={item.brand} img={item.img} />
+                     )
+                  }
                />
             </SafeAreaView>
          </View>
