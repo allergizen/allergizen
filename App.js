@@ -29,8 +29,8 @@ export default function App() {
                   {/* <Stack.Screen name='ForgotPassword' component={ForgotPassword} /> */}
                </Stack.Navigator>
             </NavigationContainer>
-            <StatusBar style='auto' />
          </Provider>
+         <StatusBar translucent backgroundColor='transparent' />
       </>
    );
 }
