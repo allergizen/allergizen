@@ -18,7 +18,6 @@ import Home from '../screens/Home';
 
 import { Context } from '../assets/Context';
 
-// import TabBarScreen from './TabBarScreen';
 const TabBar = ({ navigation }) => {
   const Tab = createMaterialBottomTabNavigator();
 
@@ -26,6 +25,7 @@ const TabBar = ({ navigation }) => {
     <View style={{ flex: 1, overflow: 'visible' }}>
       <Tab.Navigator
         initialRouteName='Home'
+        shifting={false}
         activeColor={Colors.green}
         inactiveColor={Colors.inactive}
         barStyle={styles.tabBar}
@@ -82,6 +82,7 @@ const TabBar = ({ navigation }) => {
             ),
           }}
         />
+
         <Tab.Screen
           name='Account'
           component={Profile}
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 0 : -15,
+    top: -9,
   },
 });
 
