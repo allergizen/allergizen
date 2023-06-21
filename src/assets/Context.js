@@ -4,7 +4,7 @@ export const Context = createContext();
 
 export const Provider = ({ children }) => {
   const [scanned, setScanned] = useState(false);
-  const [UID, setUID] = useState('buonaseracinaaaaaaaaaaaa');
+  const [UID, setUID] = useState('');
   return (
     <Context.Provider value={{ scanned, setScanned, UID, setUID }}>
       {children}
