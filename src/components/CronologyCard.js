@@ -93,7 +93,7 @@ const CronologyCard = ({ item }) => {
 
 const styles = StyleSheet.create({
   allergy: {
-    backgroundColor: Colors.red,
+    backgroundColor: Colors.lightRed,
   },
 
   noAllergy: {
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
 
   undefinedAllergy: {
-    backgroundColor: Colors.idk,
+    backgroundColor: Colors.lightYellow,
   },
   cronologyCardStyle: {
     height: 125,

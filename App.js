@@ -20,6 +20,7 @@ export default function App() {
                   initialRouteName={'Login'}
                   screenOptions={() => ({
                      headerShown: false,
+                     gestureEnabled: false,
                   })}>
                   <Stack.Screen name='Login' component={Login} />
                   <Stack.Screen name='Signup' component={Signup} />

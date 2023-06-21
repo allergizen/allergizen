@@ -136,13 +136,6 @@ const Profile = () => {
 
    return (
       <SafeAreaView style={styles.screen}>
-         <Dialog.Container visible={visible}>
-            <Dialog.Title>Modifica account</Dialog.Title>
-
-            <Dialog.Button label='Annulla' onPress={handleCancel} />
-            <Dialog.Button label='Conferma' onPress={confirmChanges} />
-         </Dialog.Container>
-
          <View style={styles.profile}>
             <Text style={styles.title}>Profile</Text>
          </View>
@@ -159,9 +152,6 @@ const Profile = () => {
                      }}>
                      <Text style={[styles.h1]}>{name}</Text>
                      <Text style={[styles.text]}>{email}</Text>
-                     <TouchableOpacity onPress={showDialog} style={styles.buttonStyle}>
-                        <Text style={{ fontWeight: 500 }}>Modifica</Text>
-                     </TouchableOpacity>
                   </View>
                </View>
             </View>
@@ -240,7 +230,7 @@ const styles = StyleSheet.create({
       borderWidth: 2,
       borderColor: '#d3d3d3',
    },
-   screenLink: { flex: 8, paddingTop: 30, paddingHorizontal: 10 },
+   screenLink: { flex: 8, paddingTop: 30, paddingHorizontal: 10 , marginBottom: 60},
    logoutStyle: {
       borderRadius: 10,
       backgroundColor: Colors.profileScreenCard,
