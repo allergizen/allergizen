@@ -18,7 +18,7 @@ import Colors from '../components/Colors';
 import Globals from '../assets/Globals';
 import ProfileLinkScreenCard from '../components/ProfileLinkScreenCard';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDoc, doc } from 'firebase/firestore/lite';
+import { getFirestore, collection, setDoc, doc, getDoc } from 'firebase/firestore/lite';
 import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { app } from './Login';
@@ -43,6 +43,8 @@ const Profile = () => {
    const { UID } = useContext(Context);
 
    const addAllergia = async (allergia) => {
+      if(allergia == 'Anidride solforosa') allergia = 'Anidridesolforosa';
+      if(allergia == 'Frutta a guscio') allergia = 'Fruttaaguscio';
       await setDoc(
          doc(db, 'users', UID),
          {
@@ -55,6 +57,8 @@ const Profile = () => {
    };
 
    const removeAllergia = async (allergia) => {
+      if(allergia == 'Anidride solforosa') allergia = 'Anidridesolforosa';
+      if(allergia == 'Frutta a guscio') allergia = 'Fruttaaguscio';
       await setDoc(
          doc(db, 'users', UID),
          {
@@ -75,53 +79,48 @@ const Profile = () => {
       setName(query.data().nome);
       setEmail(query.data().email);
       Object.keys(query.data().allergie).forEach((key) => {
-         if (key == 'Anidridesolforosa') key = 'Anidride solforosa';
-         if (key == 'Fruttaaguscio') key = 'Frutta a guscio';
          DATA.push({ allergia: key, state: query.data().allergie[key] });
       });
    }
 
-   const Item = ({ name, state }) => (
-      //crea una card con il nome a sinistra e il bottone a destra
-      <View style={styles.card}>
-         <View style={{ flexDirection: 'row' }}>
+   const Item = ({ name, state }) => {
+      const [isClicked, setIsClicked] = useState(false);
+    
+      const handleButtonPress = () => {
+        if (isClicked) {
+          removeAllergia(name);
+        } else {
+          addAllergia(name);
+        }
+    
+        setIsClicked(prevState => !prevState);
+      };
+    
+      React.useEffect(() => {
+        setIsClicked(state);
+      }, [state]);
+    
+      if (name == 'Anidridesolforosa') name = 'Anidride solforosa';
+      if (name == 'Fruttaaguscio') name = 'Frutta a guscio';
+
+      return (
+        <View style={styles.card}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={{ flex: 3 }}>
-               <Text style={styles.cardTitle}>{name}</Text>
+              <Text style={styles.cardTitle}>{name}</Text>
             </View>
             <View style={{ flex: 1 }}>
-               {state ? (
-                  <IconButton
-                     icon={(props) => <Icon name='close' {...props} />}
-                     color='red'
-                     onPress={() => {
-                        //removeAllergia(name);
-                     }}
-                  />
-               ) : (
-                  <IconButton
-                     icon={(props) => <Icon name='plus' {...props} />}
-                     color='green'
-                     onPress={() => {
-                        //addAllergia(name);
-                     }}
-                  />
-               )}
+              <IconButton
+                icon={(props) => <Icon name={isClicked ? 'close' : 'plus'} {...props} />}
+                color={isClicked ? 'red' : 'green'}
+                onPress={handleButtonPress}
+              />
             </View>
-         </View>
-      </View>
-   );
-   const [visible, setVisible] = React.useState(false);
+          </View>
+        </View>
+      );
+    };
 
-   const showDialog = () => {
-      setVisible(true);
-   };
-
-   const handleCancel = () => {
-      setVisible(false);
-   };
-   const confirmChanges = () => {
-      setVisible(false);
-   };
 
    if (!readed) {
       getInfo();
@@ -131,8 +130,6 @@ const Profile = () => {
          }
       }, 100);
    }
-   //<Dialog.input label="Nome"></Dialog.input>
-   //<Dialog.input label="Email"></Dialog.input>
 
    return (
       <SafeAreaView style={styles.screen}>
@@ -146,6 +143,9 @@ const Profile = () => {
                   <Image source={require('../assets/images/icon.png')} style={styles.profileIcon} />
                   <View
                      style={{
+                        justifyContent: 'center',
+                        flex: 1,
+                  
                         flexDirection: 'column',
                         height: '100%',
                         paddingTop: 5,
@@ -159,6 +159,7 @@ const Profile = () => {
                <Text style={styles.subtitle}>Allergeni</Text>
 
                <FlatList
+               style={{marginTop: 10}}
                   data={DATA}
                   renderItem={({ item }) => <Item name={item.allergia} state={item.state} />}
                />
@@ -185,15 +186,10 @@ const styles = StyleSheet.create({
       flex: 2,
    },
 
-   info: {
-      justifyContent: 'flex-end',
-      paddingHorizontal: Globals.css.HorizontalPaddingView / 2,
-      flex: 2,
-   },
-
    infoView: {
       flexDirection: 'row',
       alignItems: 'center',
+      flex: 1,
       justifyContent: 'space-evenly',
       maxHeight: 100,
    },
@@ -241,15 +237,15 @@ const styles = StyleSheet.create({
    logoutTextStyle: { fontSize: 18, color: Colors.red },
 
    card: {
+      justifyContent: 'center',
+      flex: 1,
       backgroundColor: 'white',
       borderRadius: 15,
       padding: 20,
       marginVertical: 8,
       marginHorizontal: 16,
-      flex: 1,
    },
    cardTitle: {
-      alignContent: 'center',
       fontSize: 25,
       fontWeight: 'normal',
    },
