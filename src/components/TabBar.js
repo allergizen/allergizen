@@ -19,6 +19,17 @@ import Home from '../screens/Home';
 import { Context } from '../assets/Context';
 
 const TabBar = ({ navigation }) => {
+  const [showCustomIcon, setShowCustomIcon] = useState(false);
+  useEffect(() => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    if (hours == 0 && minutes == 0) {
+      setShowCustomIcon(true);
+    }
+  }, []);
+
   const Tab = createMaterialBottomTabNavigator();
 
   return (
@@ -88,9 +99,21 @@ const TabBar = ({ navigation }) => {
           component={Profile}
           options={{
             tabBarLabel: 'Account',
-            tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name='account' color={color} size={26} />
-            ),
+            tabBarIcon: ({ color }) =>
+              showCustomIcon ? (
+                <View>
+                  <Image
+                    style={{ width: 25, height: 25 }}
+                    source={require('../assets/images/topg.png')}
+                  />
+                </View>
+              ) : (
+                <MaterialCommunityIcons
+                  name='account'
+                  color={color}
+                  size={26}
+                />
+              ),
           }}
         />
       </Tab.Navigator>
