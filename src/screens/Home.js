@@ -16,29 +16,6 @@ import { Provider, Context } from '../assets/Context';
 
 const { getItem, setItem } = useAsyncStorage('productHistory');
 
-const SAVED = [
-  {
-    name: 'Lista 1',
-    color: '#E5E1FE',
-    code: '001',
-  },
-  {
-    name: 'Lista 2',
-    color: '#A979C6',
-    code: '002',
-  },
-  {
-    name: 'Lista 3',
-    color: '#7497EF',
-    code: '003',
-  },
-  {
-    name: 'Lista 4',
-    color: '#f9df9f',
-    code: '004',
-  },
-];
-
 
 const Home = () => {
   const [product, setProduct] = useState({});

@@ -177,6 +177,7 @@ export default function Scan() {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
+    addItemToCronology(data);
     setDati(null)
 
     cameraRef.current.pausePreview();
@@ -296,6 +297,43 @@ export default function Scan() {
     );
   }
 
+  function addItemToCronology(code) {
+    console.log("entrato")
+    //fai una richiesta all'api per ottenere i dati del prodotto
+    api.from_barcode(code).then((res) => {
+      const item = {
+        product_name: res.product.product_name,
+        img: res.product.image_front_url,
+        code: res.code,
+        brand: res.product.brands,
+        allergens: res.product.allergens,
+      }
+      console.log(item)
+      if (res.status === 0) {
+        return;
+      }
+      var curUID = getAuth().currentUser.uid;
+      setDoc(
+        doc(db, 'users', curUID),
+        { 
+          cronology: {
+            [code]: {
+              name: item.product_name,
+              img: item.img,
+              brand: item.brand,
+              allergens: item.allergens,
+            },
+          }
+        },
+        { merge: true },
+      );
+    })
+      .catch(() => {
+        return;
+      });
+
+  }
+
   return <Provider>
     <View style={[styles.container, { backgroundColor: 'black' }]}>
       {cameraStatus || Platform.OS === 'ios' ? (
@@ -372,7 +410,8 @@ export default function Scan() {
         </View>
 
         {dati === null ? <></> : <>
-          <View style={styles.product}>
+          <View style={styles.product}
+          >
             <Image
               source={{ uri: dati.product.image_url }}
               style={styles.img}
