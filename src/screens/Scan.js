@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -206,8 +206,10 @@ export default function Scan() {
       });
 
       setBackHandler(BackHandler.addEventListener('hardwareBackPress', closeResults))
-
+      setScanned(false)
       setResultY(0.1 * screenHeight);
+
+      addItemToCronology(item);
     })
       .catch(() => {
         closeResults()
@@ -436,17 +438,17 @@ export default function Scan() {
             {scriviAllergeni(dati.product.allergens, 'red') ?? 'Nessun allergeno trovato'}
           </Text>
 
-          <Text style={[styles.infoHeader, { top: 20 }]}>Ingredienti</Text>
+          {/* <Text style={[styles.infoHeader, { top: 20 }]}>Ingredienti</Text>
           <Text style={[styles.infoContent, { top: 20 }]} numberOfLines={3}>
             {dati.product.ingredients_text ?? 'Non trovati'}
-          </Text>
+          </Text> */}
 
-          <Text style={[styles.infoHeader, { top: 40 }]}>Tracce</Text>
-          <Text style={[styles.infoContent, { top: 40 }]}>
+          <Text style={[styles.infoHeader, { top: 5 }]}>Tracce</Text>
+          <Text style={[styles.infoContent, { top: 5 }]}>
             {scriviAllergeni(dati.product.traces, 'gold') ?? 'Nessuna traccia rilevata'}
           </Text>
 
-          <Text style={[styles.infoHeader, { top: 50 }]}>Punteggio</Text>
+          <Text style={[styles.infoHeader, { top: 10 }]}>Punteggio</Text>
           <View style={[styles.nutriScore, { backgroundColor: nutriColor[dati.product.nutrition_grades ?? 'unknown'].color + '33' }]}>
             <NutriscoreA
               style={{ transform: 'scale(0.65)', top: 15, left: -25 }}
@@ -513,7 +515,7 @@ const styles = StyleSheet.create({
     bottom: -borderSize,
   },
   result: {
-    padding: 10,
+    padding:10,
     flex: 1,
     flexDirection: 'column',
     position: 'absolute',
@@ -555,7 +557,6 @@ const styles = StyleSheet.create({
   product: {
     display: 'flex',
     flexDirection: 'row',
-    left: 2,
     gap: 10,
     height: 200,
     top: 30,
@@ -573,7 +574,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    marginHorizontal: 5,
+    marginHorizontal: 0,
     gap: 5,
     paddingHorizontal: 5,
     marginTop: 10,
@@ -600,22 +601,22 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 20,
     fontWeight: 'bold',
-    left: 20,
+    left: 10,
   },
   infoContent: {
-    marginHorizontal: 20,
+    marginHorizontal: 10,
   },
   nutriScore: {
     top: 20,
-    left: 15,
-    width: '90%',
+    left: 0,
+    width: '100%',
     height: 100,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     gap: -110,
     borderRadius: 10,
-    top: 60,
+    top: 20,
   },
   nutriScoreInfo: {
     alignSelf: 'center',
