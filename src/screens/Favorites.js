@@ -9,9 +9,13 @@ import Colors from '../components/Colors';
 
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, Image } from 'react-native';
 import Profile from './Profile.js';
-import { getFirestore, collection, getDoc, doc } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDoc, doc, deleteDoc } from 'firebase/firestore/lite';
 import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
 import { app } from './Login';
+import { IconButton } from '@react-native-material/core';
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+
+
 
 
 const firebaseConfig = {
@@ -45,6 +49,12 @@ const Favorites = () => {
       setData(newData);
       readed = true;
    }
+
+   const removeAllergy = async (code) => {
+      await deleteDoc(doc(db, 'users', UID, 'favourites', code));
+   };
+   
+
    const Item = ({ name, img, brand, code }) => (
       <View style={styles.card}>
          <View style={{ flexDirection: 'row' }}>
@@ -54,6 +64,13 @@ const Favorites = () => {
             <View style={{ flex: 3 }}>
                <Text style={styles.cardTitle}>{name}</Text>
                <Text style={styles.cardSubtitle}>{brand}</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+               <IconButton
+                  icon={(props) => <Icon name={'close'} {...props} />}
+                  color={'red'}
+                  onPress={() => ({})}
+               />
             </View>
 
          </View>
