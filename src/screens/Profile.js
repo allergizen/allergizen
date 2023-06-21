@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
       borderWidth: 2,
       borderColor: '#d3d3d3',
    },
-   screenLink: { flex: 8, paddingTop: 30, paddingHorizontal: 10 },
+   screenLink: { flex: 8, paddingTop: 30, paddingHorizontal: 10 , marginBottom: 60},
    logoutStyle: {
       borderRadius: 10,
       backgroundColor: Colors.profileScreenCard,

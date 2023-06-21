@@ -59,7 +59,7 @@ export default Login = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const { UID, setUID } = useContext(Context);
   useEffect(() => {
-    if (UID.length > 3) navigation.navigate('TabBar');
+    if (UID.length > 3) navigation.replace('TabBar');
   }, [UID]);
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -80,11 +80,6 @@ export default Login = ({ navigation }) => {
   const handleSignupButtonNavigation = () => {
     navigation.navigate('Signup');
   };
-
-  const handleForgotPasspButtonNavigation = () => {
-    navigation.navigate('ForgotPassword');
-  };
-
   return (
     <Provider>
       <KeyboardAvoidingView
@@ -111,14 +106,6 @@ export default Login = ({ navigation }) => {
             onChangeText={(password) => setPassword(password)}
           />
         </View>
-        <TouchableOpacity onPress={() => {}} style={styles.forgotContainer}>
-          <Text
-            style={styles.textAsBtn}
-            onPress={handleForgotPasspButtonNavigation}
-          >
-            Forgot password?
-          </Text>
-        </TouchableOpacity>
         <View style={styles.buttonContainer}>
           <TouchableOpacity onPress={handleLogin} style={styles.button}>
             <Text style={styles.buttonText}>Login</Text>
@@ -168,10 +155,6 @@ const styles = StyleSheet.create({
     color: '#DAAF53',
     fontWeight: 'bold',
     textAlign: 'right',
-  },
-
-  forgotContainer: {
-    marginTop: 10,
   },
   text: {
     fontWeight: 'normal',

@@ -5,7 +5,6 @@ import Colors from './Colors';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import api from '../api/api';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import 'react-native-gesture-handler';
 
 const CronologyCard = ({ item }) => {
   fetch(item.img).then((res) => res.blob().then());
@@ -75,17 +74,7 @@ const CronologyCard = ({ item }) => {
                 size={26}
               />
             )}
-            <Text
-              style={{ fontSize: 12, marginLeft: 5 }}
-              onPress={() =>
-                console.log(
-                  'item.allergens' +
-                    Boolean(item.allergens) +
-                    '   item.traces' +
-                    item.traces
-                )
-              }
-            >
+            <Text style={{ fontSize: 12, marginLeft: 5 }}>
               {api.get_allergens(item.allergens).length &&
               api.get_allergens(item.traces).length
                 ? 'Rilevati allergeni e tracce'
