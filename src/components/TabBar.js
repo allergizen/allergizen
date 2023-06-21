@@ -12,14 +12,25 @@ import Home from '../screens/Home';
 
 import { Context } from '../assets/Context';
 
-// import TabBarScreen from './TabBarScreen';
 const TabBar = ({ navigation }) => {
+   const [showCustomIcon, setShowCustomIcon] = useState(false);
+   useEffect(() => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+
+      if (hours == 0 && minutes == 0) {
+         setShowCustomIcon(true);
+      }
+   }, []);
+
    const Tab = createMaterialBottomTabNavigator();
 
    return (
       <View style={{ flex: 1, overflow: 'visible' }}>
          <Tab.Navigator
             initialRouteName='Home'
+            shifting={false}
             activeColor={Colors.green}
             inactiveColor={Colors.inactive}
             barStyle={styles.tabBar}
@@ -71,14 +82,23 @@ const TabBar = ({ navigation }) => {
                   ),
                }}
             />
+
             <Tab.Screen
                name='Account'
                component={Profile}
                options={{
                   tabBarLabel: 'Account',
-                  tabBarIcon: ({ color }) => (
-                     <MaterialCommunityIcons name='account' color={color} size={26} />
-                  ),
+                  tabBarIcon: ({ color }) =>
+                     showCustomIcon ? (
+                        <View>
+                           <Image
+                              style={{ width: 25, height: 25 }}
+                              source={require('../assets/images/topg.png')}
+                           />
+                        </View>
+                     ) : (
+                        <MaterialCommunityIcons name='account' color={color} size={26} />
+                     ),
                }}
             />
          </Tab.Navigator>
@@ -111,7 +131,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       position: 'absolute',
-      bottom: Platform.OS === 'ios' ? 0 : -15,
+      top: -9,
    },
 });
 
