@@ -59,6 +59,17 @@ export default api = {
          allergens.filter((el) => userAllergens.includes(el)).join(','),
       );
    },
+
+   normalize_data: (data) => {
+      return {
+         product_name: data.product_name?? data.product_name_en?? data.product_name_fr?? '?',
+         img: data.image_front_url,
+         code: data.code,
+         brand: data.brands,
+         allergens: data.allergens,
+         traces: data.traces,
+      };
+   }
 };
 
 /*
