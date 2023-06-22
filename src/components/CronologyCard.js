@@ -16,7 +16,7 @@ const CronologyCard = ({ item }) => {
    else if (item.code === '3mpty') {
       return <View style={{ minHeight: 100 }}></View>;
    } else {
-      fetch(item.img).then((res) => res.blob().then());
+      // if (item.img) fetch(item.img).then((res) => res.blob().then());
       const numAll = api.get_allergens(item.allergens).length;
       return (
          <View style={[styles.cronologyCardStyle]}>
@@ -28,7 +28,7 @@ const CronologyCard = ({ item }) => {
                   maxHeight: 125,
                   flex: 1,
                }}>
-               <ImageBackground source={{ uri: item.img }} style={styles.imageBackground} />
+               <ImageBackground source={ item.img? {uri: item.img} : require('../assets/images/not_found.png') } style={styles.imageBackground} />
             </View>
 
             <View style={{ flex: 2, padding: 5, marginLeft: 15 }}>

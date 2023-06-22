@@ -34,26 +34,24 @@ const db = getFirestore(app);
 
 const Favorites = () => {
    const [data, setData] = useState([]);
+   const [readed, setReaded] = useState(false)
 
    const { UID } = useContext(Context);
-   var readed = false;
    async function getSaved() {
       if (readed) return;
+      setReaded(true)
       var query = await getDoc(doc(db, 'users', UID));
-      const newData = Object.keys(query.data().favourites).map((obj) => ({
+      setData(Object.keys(query.data().favourites).map((obj) => ({
          code: obj,
          brand: query.data().favourites[obj].brand,
          img: query.data().favourites[obj].img,
          name: query.data().favourites[obj].name,
-      }));
-      setData(newData);
-      readed = true;
+      })));
    }
 
    const removeAllergy = async (code) => {
       await deleteDoc(doc(db, 'users', UID, 'favourites', code));
    };
-   
 
    const Item = ({ name, img, brand, code }) => (
       <View style={styles.card}>
@@ -77,14 +75,9 @@ const Favorites = () => {
       </View>
    );
 
-
    if (!readed) {
       getSaved();
-      var interval = setInterval(() => {
-         if (readed) {
-            clearInterval(interval);
-         }
-      }, 100);
+      console.log('favoriti')
    }
 
    return (
