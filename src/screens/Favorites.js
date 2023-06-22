@@ -37,60 +37,59 @@ const firebaseConfig = {
 const db = getFirestore(app);
 
 const Favorites = () => {
-  const [data, setData] = useState([]);
-  const { UID } = useContext(Context);
+   const [data, setData] = useState([]);
 
-  const [readed, setReaded] = useState(false);
+   const { UID } = useContext(Context);
+   var readed = false;
+   async function getSaved() {
+      if (readed) return;
+      var query = await getDoc(doc(db, 'users', UID));
+      const newData = Object.keys(query.data().favourites).map((obj) => ({
+         code: obj,
+         brand: query.data().favourites[obj].brand,
+         img: query.data().favourites[obj].img,
+         name: query.data().favourites[obj].name,
+      }));
+      setData(newData);
+      readed = true;
+   }
 
-  async function getSaved() {
-    if (readed) return;
-    var query = await getDoc(doc(db, 'users', UID));
-    const newData = Object.keys(query.data().favourites).map((obj) => ({
-      code: obj,
-      brand: query.data().favourites[obj].brand,
-      img: query.data().favourites[obj].img,
-      name: query.data().favourites[obj].name,
-    }));
-    setData(newData);
-    setReaded(true);
-  }
+   const removeAllergy = async (code) => {
+      await deleteDoc(doc(db, 'users', UID, 'favourites', code));
+   };
+   
 
-  const removeAllergy = async (code) => {
-    await updateDoc(doc(db, 'users', UID), {
-      [`favourites.${code}`]: deleteField(),
-    });
-    setData((prevData) => prevData.filter((item) => item.code !== code));
-  };
+   const Item = ({ name, img, brand, code }) => (
+      <View style={styles.card}>
+         <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 1 }}>
+               <Image source={{ uri: img }} style={{ height: 50, width: 50 }} />
+            </View>
+            <View style={{ flex: 3 }}>
+               <Text style={styles.cardTitle}>{name}</Text>
+               <Text style={styles.cardSubtitle}>{brand}</Text>
+            </View>
+            <View style={{ flex: 1 }}>
+               <IconButton
+                  icon={(props) => <Icon name={'close'} {...props} />}
+                  color={'red'}
+                  onPress={() => ({})}
+               />
+            </View>
 
-  const Item = ({ name, img, brand, code }) => (
-    <View style={styles.card}>
-      <View style={{ flexDirection: 'row' }}>
-        <View style={{ flex: 1 }}>
-          <Image source={{ uri: img }} style={{ height: 50, width: 50 }} />
-        </View>
-        <View style={{ flex: 3 }}>
-          <Text style={styles.cardTitle}>{name}</Text>
-          <Text style={styles.cardSubtitle}>{brand}</Text>
-        </View>
-        <View style={{ flex: 1 }}>
-          <IconButton
-            icon={(props) => <Icon name={'close'} {...props} />}
-            color={'red'}
-            onPress={() => removeAllergy(code)}
-          />
-        </View>
+         </View>
       </View>
-    </View>
-  );
+   );
 
-  if (!readed) {
-    getSaved();
-    var interval = setInterval(() => {
-      if (readed) {
-        clearInterval(interval);
-      }
-    }, 100);
-  }
+
+   if (!readed) {
+      getSaved();
+      var interval = setInterval(() => {
+         if (readed) {
+            clearInterval(interval);
+         }
+      }, 100);
+   }
 
   return (
     <View style={styles.screen}>
@@ -119,26 +118,26 @@ const Favorites = () => {
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    flexDirection: 'column',
-  },
-  savedView: {
-    backgroundColor: Colors.background,
-    flex: 2,
-    flexDirection: 'column',
-    paddingHorizontal: Globals.css.HorizontalPaddingView,
-  },
-  productArea: {
-    backgroundColor: Colors.background,
-    flex: 10,
-  },
-  title: {
-    fontSize: 40,
-    marginVertical: 50,
-    paddingHorizontal: Globals.css.HorizontalPaddingView,
-    fontWeight: 'bold',
-  },
+   screen: {
+      flex: 1,
+      flexDirection: 'column',
+   },
+   savedView: {
+      backgroundColor: Colors.background,
+      flex: 2,
+      flexDirection: 'column',
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
+   },
+   productArea: {
+      backgroundColor: Colors.background,
+      flex: 10,
+   },
+   title: {
+      fontSize: 40,
+      marginVertical: 50,
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
+      fontWeight: 'bold'
+   },
 
   h1: { fontSize: 20 },
 

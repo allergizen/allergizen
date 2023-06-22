@@ -195,14 +195,7 @@ export default function Scan() {
 
       api.from_barcode(data)
          .then((res) => {
-            const item = {
-               product_name: res.product.product_name,
-               img: res.product.image_front_url,
-               code: res.code,
-               brand: res.product.brands,
-               allergens: res.product.allergens,
-               traces: res.product.traces,
-            };
+            const item = api.normalize_data(res.product)
 
             if (res.status === 0) {
                closeResults();
