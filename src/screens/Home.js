@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, FlatList, Image, ImageBackground } from 'react-native';
+import React from 'react';
 
-import { React, useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Globals from '../assets/Globals.js';
 import Colors from '../components/Colors';
 import { useNavigation } from '@react-navigation/native';
@@ -15,13 +16,26 @@ import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { Provider, Context } from '../assets/Context';
 
 const { getItem, setItem } = useAsyncStorage('productHistory');
+import { getFirestore, collection, getDoc, doc, setDoc } from 'firebase/firestore/lite';
+import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
+import { app } from './Login';
 
-// TODO referesh cronologia quando entro nella pagina
-// TODO raccolta di foto che possano cambiare con il tempo
+const firebaseConfig = {
+   apiKey: KEY,
+   authDomain: AD,
+   projectId: PRID,
+   storageBucket: STBU,
+   messagingSenderId: MSI,
+   appId: AI,
+};
 
-// Funzione che viene chiamata quando il valore di scanned cambia
 
 const Home = () => {
+   const db = getFirestore(app);
+   var readed = false;
+   const { UID } = useContext(Context);
+
+
    const [product, setProduct] = useState([]);
    const { scanned } = useContext(Context);
    const handleScannedChange = (newValue) => {
@@ -40,6 +54,23 @@ const Home = () => {
          handleScannedChange(scanned);
       }
    }, [scanned]);
+
+   var [name, setName] = React.useState('nome');
+   async function getInfo() {
+      if (readed) return;
+      readed = true;
+      var query = await getDoc(doc(db, 'users', UID));
+      setName(query.data().nome);
+   }
+
+   if (!readed) {
+      getInfo();
+      var interval = setInterval(() => {
+         if (readed) {
+            clearInterval(interval);
+         }
+      }, 100);
+   }
    return (
       <Provider>
          <View style={styles.screen}>
@@ -58,16 +89,16 @@ const Home = () => {
                   <Text
                      style={[
                         styles.h1,
-                        { color: '#fff', fontSize: 26, maxHeight: 30, fontWeight: '400' },
+                        { color: '#E4E4E4', fontSize: 25, maxHeight: 30, fontWeight: '400' },
                      ]}>
-                     Bentornato!
+                     Bentornato,
                   </Text>
                   <Text
                      style={[
                         styles.h1,
-                        { color: '#fff', maxHeight: 40, marginLeft: 15, fontWeight: '500' },
+                        { color: '#fff', maxHeight: 45, marginLeft: 15, fontWeight: '500' },
                      ]}>
-                     indiano bastardo
+                     {name}
                   </Text>
                </ImageBackground>
             </View>

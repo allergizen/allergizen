@@ -38,12 +38,12 @@ const CronologyCard = ({ item }) => {
                      justifyContent: 'center',
                      textAlignVertical: 'center',
                   }}>
-                  <Text style={{ fontSize: 18, lineHeight: 30 }}>
+                  <Text style={{ fontSize: 18, lineHeight: 30, fontWeight: 600 }}>
                      {item.product_name.length > 16
                         ? item.product_name.slice(0, 16) + '...'
                         : item.product_name}
                   </Text>
-                  <Text style={{ fontSize: 12, lineHeight: 20 }}>{item.brand}</Text>
+                  <Text style={{ fontSize: 12, lineHeight: 20 }}>{item.brands}</Text>
                   <View
                      style={{
                         flexDirection: 'row',
@@ -59,30 +59,29 @@ const CronologyCard = ({ item }) => {
                      <Text
                         style={[
                            api.get_allergens(item.allergens).length &&
-                           api.get_allergens(item.traces).length
+                              api.get_allergens(item.traces).length
                               ? styles.allergy
                               : api.get_allergens(item.allergens).length
-                              ? styles.allergy
-                              : api.get_allergens(item.traces).length
-                              ? styles.undefinedAllergy
-                              : styles.noAllergy,
+                                 ? styles.allergy
+                                 : api.get_allergens(item.traces).length
+                                    ? styles.undefinedAllergy
+                                    : styles.noAllergy,
                            {
                               fontSize: 14,
                               fontWeight: '500',
                               marginLeft: 5,
                               minHeight: 30,
                               padding: 5,
-                              borderRadius: 8,
                            },
                         ]}>
                         {api.get_allergens(item.allergens).length &&
-                        api.get_allergens(item.traces).length
+                           api.get_allergens(item.traces).length
                            ? 'Rilevati allergeni e tracce'
                            : api.get_allergens(item.allergens).length
-                           ? 'Rilevati allergeni'
-                           : api.get_allergens(item.traces).length
-                           ? 'Rilevate tracce'
-                           : 'Allergeni non presenti'}
+                              ? 'Rilevati allergeni'
+                              : api.get_allergens(item.traces).length
+                                 ? 'Rilevate tracce'
+                                 : 'Allergeni non presenti'}
                      </Text>
                   </View>
                </View>
@@ -96,18 +95,24 @@ const styles = StyleSheet.create({
    allergy: {
       backgroundColor: Colors.lightRed,
       color: Colors.textLightRed,
+      borderRadius: 10,
+
       // backgroundColor: '#fff',
    },
 
    noAllergy: {
       // backgroundColor: '#fff',
       backgroundColor: Colors.lightGreen,
+      borderRadius: 10,
+
       color: Colors.textLightGreen,
    },
 
    undefinedAllergy: {
       // backgroundColor: '#fff',
       backgroundColor: Colors.lightYellow,
+      borderRadius: 10,
+
       color: Colors.textLightYellow,
    },
    cronologyCardStyle: {

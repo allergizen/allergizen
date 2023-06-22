@@ -1,3 +1,5 @@
+import { AsyncStorage } from '@react-native-async-storage/async-storage';
+
 export default api = {
    API_ENDPOINT: 'https://it.openfoodfacts.org/',
 
@@ -53,8 +55,8 @@ export default api = {
    get_allergens: (allergens) => {
       allergens = allergens.split(',');
 
-      const userAllergens = ['en:celery', 'en:gluten'];
-
+      var userAllergens = [];
+      
       return api.translate_allergens(
          allergens.filter((el) => userAllergens.includes(el)).join(','),
       );

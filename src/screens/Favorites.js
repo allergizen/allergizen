@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: Globals.css.HorizontalPaddingView,
    },
    productArea: {
+      marginBottom: 100,
       backgroundColor: Colors.background,
       flex: 10,
    },

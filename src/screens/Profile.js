@@ -5,6 +5,7 @@ import {
    SafeAreaView,
    Image,
    TouchableOpacity,
+   ImageBackground,
    FlatList,
    ScrollView,
 } from 'react-native';
@@ -18,7 +19,7 @@ import Globals from '../assets/Globals';
 import ProfileLinkScreenCard from '../components/ProfileLinkScreenCard';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDoc, doc, setDoc } from 'firebase/firestore/lite';
-
+import { AsyncStorage } from '@react-native-async-storage/async-storage';
 import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { app } from './Login';
@@ -54,7 +55,6 @@ const Profile = () => {
          },
          { merge: true },
       );
-      console.log('Allergia aggiunta');
    };
 
    const removeAllergia = async (allergia) => {
@@ -82,6 +82,7 @@ const Profile = () => {
       Object.keys(query.data().allergie).forEach((key) => {
          DATA.push({ allergia: key, state: query.data().allergie[key] });
       });
+
    }
 
    const Item = ({ name, state }) => {
@@ -108,7 +109,9 @@ const Profile = () => {
          <View style={styles.card}>
             <View style={{ flexDirection: 'row' }}>
                <View style={{ flex: 3 }}>
-                  <Text style={styles.cardTitle}>{name}</Text>
+               <Text style={styles.cardTitle}>
+                     <Icon name="food" style={styles.emojiIcon} /> {name}
+                  </Text>
                </View>
                <View style={{ flex: 1 }}>
                   <IconButton
@@ -132,123 +135,119 @@ const Profile = () => {
    }
 
    return (
-      <SafeAreaView style={styles.screen}>
-         <View style={styles.profile}>
-            <Text style={styles.title}>Profile</Text>
-         </View>
+      <Provider>
+         <View style={styles.screen}>
+            <View style={styles.welcomeView}>
+               {/* Immagine usata come sfondo */}
+               <ImageBackground
+                  source={require('../assets/images/background.png')}
+                  resizeMode='cover'
+                  style={{
+                     flex: 1,
+                     margin: -25,
+                     paddingHorizontal: 50,
+                     paddingTop: 80,
+                     justifyContent: 'flex-start',
+                  }}>
+                  <Text
+                     style={[
+                        styles.h1,
+                        { color: '#E4E4E4', fontSize: 25, maxHeight: 30, fontWeight: '400' },
+                     ]}>
+                     Profilo
+                  </Text>
+                  <Text style={[styles.text]}>{email}</Text>
 
-         <View style={{ flex: 10, marginTop: 30 }}>
-            <View style={styles.info}>
-               <View style={styles.infoView}>
-                  <Image source={require('../assets/images/icon.png')} style={styles.profileIcon} />
-                  <View
-                     style={{
-                        justifyContent: 'center',
-                        flex: 1,
-
-                        flexDirection: 'column',
-                        height: '100%',
-                        paddingTop: 5,
-                     }}>
-                     <Text style={[styles.h1]}>{name}</Text>
-                     <Text style={[styles.text]}>{email}</Text>
+                  <Text style={[styles.h1]}>{name}</Text>
+               </ImageBackground>
+            </View>
+            <View style={styles.productArea}>
+               {/* Cronologia  */}
+               <View
+                  style={{
+                     flex: 12,
+                     flexDirection: 'column',
+                  }}>
+                  <View style={{ flex: 15, width: '100%' }}>
+                     <FlatList
+                        horizontal={false}
+                        showsVerticalScrollIndicator={false}
+                        style={{ marginTop: 10 }}
+                        data={DATA}
+                        renderItem={({ item }) => <Item name={item.allergia} state={item.state} />}
+                     />
                   </View>
                </View>
             </View>
-            <View style={styles.screenLink}>
-               <Text style={styles.subtitle}>Allergeni</Text>
-
-               <FlatList
-                  style={{ marginTop: 10 }}
-                  data={DATA}
-                  renderItem={({ item }) => <Item name={item.allergia} state={item.state} />}
-               />
-            </View>
          </View>
-      </SafeAreaView>
+      </Provider>
+
+
    );
 };
 
 const styles = StyleSheet.create({
-   screen: {
-      flex: 1,
-      flexDirection: 'column',
-   },
-   profile: {
-      justifyContent: 'flex-end',
-      paddingHorizontal: Globals.css.HorizontalPaddingView,
-      flex: 1,
-   },
+   
 
-   info: {
-      justifyContent: 'flex-end',
-      paddingHorizontal: Globals.css.HorizontalPaddingView / 2,
-      flex: 2,
-   },
-
-   infoView: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      flex: 1,
-      justifyContent: 'space-evenly',
-      maxHeight: 100,
-   },
-   productArea: {
-      flex: 10,
-   },
-   title: {
-      fontSize: 40,
-      fontWeight: 'bold',
-      paddingHorizontal: Globals.css.HorizontalPaddingView,
-   },
    subtitle: {
       fontSize: 25,
       fontWeight: 'semibold',
       paddingHorizontal: Globals.css.HorizontalPaddingView,
    },
-   h1: { fontSize: 20, fontWeight: '600' },
-   text: {},
-   buttonStyle: {
-      borderRadius: 7,
-      backgroundColor: Colors.idk,
-      justifyContent: 'center',
-      alignItems: 'center',
-      alignContent: 'flex-end',
-      marginTop: 5,
-      maxWidth: 120,
-      minHeight: 22,
-      opacity: 0.75,
+   text: {
+      fontSize: 15,
+      fontWeight: '400',
+      color: '#E4E4E4',
+
    },
-   profileIcon: {
-      width: 80,
-      height: 80,
-      borderRadius: 50,
-      borderWidth: 2,
-      borderColor: '#d3d3d3',
-   },
-   screenLink: { flex: 8, paddingTop: 30, paddingHorizontal: 10, marginBottom: 60 },
-   logoutStyle: {
-      borderRadius: 10,
-      backgroundColor: Colors.profileScreenCard,
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   logoutTextStyle: { fontSize: 18, color: Colors.red },
 
    card: {
       justifyContent: 'center',
       flex: 1,
       backgroundColor: 'white',
       borderRadius: 15,
-      padding: 20,
+      padding: 10,
       marginVertical: 8,
       marginHorizontal: 16,
    },
    cardTitle: {
-      fontSize: 25,
+      fontSize: 20,
       fontWeight: 'normal',
+      marginTop: 12,
    },
+
+
+   screen: {
+      flex: 1,
+      flexDirection: 'column',
+      backgroundColor: 'rgba(0,0,0,0)',
+   },
+   welcomeView: {
+      flex: 5,
+      justifyContent: 'flex-start',
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
+   },
+   productArea: {
+      flex: 12,
+      marginBottom: 100,
+
+      paddingHorizontal: Globals.css.HorizontalPaddingView,
+      borderTopEndRadius: 30,
+      borderTopStartRadius: 30,
+      overflow: 'hidden',
+      backgroundColor: Colors.background,
+   },
+   h1: { 
+      fontSize: 30, 
+      flex: 1, 
+      fontWeight: 500, 
+      color: '#fff' 
+   },
+   
+   emojiIcon: {
+      fontSize: 18,
+   },
+
 });
 
 export default Profile;
