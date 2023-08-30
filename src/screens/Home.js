@@ -1,24 +1,42 @@
-import { StyleSheet, Text, View, FlatList, Image, ImageBackground } from 'react-native';
-import React from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
-import { useState, useEffect, useContext } from 'react';
-import Globals from '../assets/Globals.js';
-import Colors from '../components/Colors';
-import { useNavigation } from '@react-navigation/native';
+import {
+  doc,
+  getDoc,
+  getFirestore,
+} from 'firebase/firestore/lite';
+import {
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
-import api from '../api/api';
-import LastSavedCard from '../components/LastSavedCard';
-import CronologyCard from '../components/CronologyCard.js';
-import { Tab } from '@rneui/base';
-
+import {
+  AD,
+  AI,
+  KEY,
+  MSI,
+  PRID,
+  STBU,
+} from '@env';
 import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
-import { Provider, Context } from '../assets/Context';
+import {
+  Context,
+  Provider,
+} from '../assets/Context';
+import Globals from '../assets/Globals.js';
+import Colors from '../components/Colors';
+import CronologyCard from '../components/CronologyCard.js';
+import { app } from './Login';
 
 const { getItem, setItem } = useAsyncStorage('productHistory');
-import { getFirestore, collection, getDoc, doc, setDoc } from 'firebase/firestore/lite';
-import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
-import { app } from './Login';
 
 const firebaseConfig = {
    apiKey: KEY,
@@ -96,7 +114,7 @@ const Home = () => {
                   <Text
                      style={[
                         styles.h1,
-                        { color: '#fff', maxHeight: 45, marginLeft: 15, fontWeight: '500' },
+                        { color: '#fff', maxHeight: 45, fontWeight: '500' },
                      ]}>
                      {name}
                   </Text>

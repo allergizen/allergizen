@@ -1,37 +1,58 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-import {
-   View,
-   StyleSheet,
-   TouchableOpacity,
-   Image,
-   Dimensions,
-   Text,
-   ScrollView,
-   BackHandler,
-} from 'react-native';
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { Camera, CameraType } from 'expo-camera';
-import api from '../api/api.js';
+import {
+  Camera,
+  CameraType,
+} from 'expo-camera';
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore/lite';
+import {
+  BackHandler,
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import * as Animatable from 'react-native-animatable';
+import { Shadow } from 'react-native-shadow-2';
+import Svg, {
+  Path,
+  SvgUri,
+} from 'react-native-svg';
+
+import {
+  AD,
+  AI,
+  KEY,
+  MSI,
+  PRID,
+  STBU,
+} from '@env';
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
-const { getItem, setItem } = useAsyncStorage('productHistory');
-
-import * as Animatable from 'react-native-animatable';
-import Svg, { Path, SvgUri } from 'react-native-svg';
-import { Shadow } from 'react-native-shadow-2';
-
-import { Context, Provider } from '../assets/Context.js';
-
-import { CrossIcon, CheckIcon, QuestionIcon } from '../assets/svgIcons.js';
-
-import { getAuth } from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, setDoc, doc, FieldValue } from 'firebase/firestore/lite';
-
-import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
-import { Colors } from 'react-native-paper';
+import api from '../api/api.js';
+import {
+  Context,
+  Provider,
+} from '../assets/Context.js';
+import {
+  CheckIcon,
+  CrossIcon,
+  QuestionIcon,
+} from '../assets/svgIcons.js';
 import Colors_ from '../components/Colors';
+
+const { getItem, setItem } = useAsyncStorage('productHistory');
 
 const firebaseConfig = {
    apiKey: KEY,
@@ -391,7 +412,7 @@ export default function Scan() {
                               numberOfLines={2}>
                               {dati.product.product_name}
                            </Text>
-                           <Text style={{ fontSize: 20, color: 'gray' }}>
+                           <Text style={{ fontSize: 15, color: 'gray' }}>
                               {dati.product.brands}
                            </Text>
 

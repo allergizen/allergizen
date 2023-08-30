@@ -1,30 +1,40 @@
+import React, {
+  useContext,
+  useState,
+} from 'react';
+
 import {
-   View,
-   Text,
-   StyleSheet,
-   SafeAreaView,
-   Image,
-   TouchableOpacity,
-   ImageBackground,
-   FlatList,
-   ScrollView,
+  doc,
+  getDoc,
+  getFirestore,
+  setDoc,
+} from 'firebase/firestore/lite';
+import {
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
-import React from 'react';
 
-import { IconButton } from '@react-native-material/core';
+import {
+  AD,
+  AI,
+  KEY,
+  MSI,
+  PRID,
+  STBU,
+} from '@env';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import { IconButton } from '@react-native-material/core';
 
-import Colors from '../components/Colors';
+import {
+  Context,
+  Provider,
+} from '../assets/Context';
 import Globals from '../assets/Globals';
-import ProfileLinkScreenCard from '../components/ProfileLinkScreenCard';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDoc, doc, setDoc } from 'firebase/firestore/lite';
-import { AsyncStorage } from '@react-native-async-storage/async-storage';
-import { KEY, AD, PRID, STBU, MSI, AI } from '@env';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import Colors from '../components/Colors';
 import { app } from './Login';
-import { useContext, useState, useEffect } from 'react';
-import { Context, Provider } from '../assets/Context';
 
 const firebaseConfig = {
    apiKey: KEY,
@@ -156,9 +166,13 @@ const Profile = () => {
                      ]}>
                      Profilo
                   </Text>
-                  <Text style={[styles.text]}>{email}</Text>
-
-                  <Text style={[styles.h1]}>{name}</Text>
+                  <Text
+                     style={[
+                        styles.h1,
+                        { color: '#fff', maxHeight: 45, fontWeight: '500' },
+                     ]}>
+                     {name}
+                  </Text>
                </ImageBackground>
             </View>
             <View style={styles.productArea}>
