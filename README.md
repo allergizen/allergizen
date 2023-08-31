@@ -45,12 +45,12 @@ Segui i passaggi di seguito per installare le dipendenze del progetto e configur
 1. Clona il repository in una directory locale:
 
 ```bash
-git clone https://github.com/tuonome/allergyscan.git
+git clone https://github.com/allergizen/allergizen.git
 ```
 
 2. Naviga nella directory del progetto:
 ```
-cd allergyscan
+cd allergizen
 ```
 3. Installa le dipendenze:
 ```
