@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h3 align="center">AllergyScan</h3>
+<h3 align="center">Allergizen</h3>
 
 <div align="center">
 
@@ -17,7 +17,7 @@
 
 ---
 
-<p align="center"> AllergyScan è un'applicazione che permette di scannerizzare i prodotti e rilevare la presenza degli allergeni selezionati dall'utente.
+<p align="center"> Allergizen è un'applicazione che permette di scannerizzare i prodotti e rilevare la presenza degli allergeni selezionati dall'utente.
     <br> 
 </p>
 
@@ -32,7 +32,7 @@
 
 ## 🧐 Info <a name = "info"></a>
 
-AllergyScan è un'applicazione dedicata a coloro che hanno allergie alimentari o altre intolleranze. Scansionando i codici a barre dei prodotti, l'applicazione rileva se sono presenti gli allergeni selezionati dall'utente, fornendo informazioni dettagliate sul contenuto degli ingredienti.
+Allergizen è un'applicazione dedicata a coloro che hanno allergie alimentari o altre intolleranze. Scansionando i codici a barre dei prodotti, l'applicazione rileva se sono presenti gli allergeni selezionati dall'utente, fornendo informazioni dettagliate sul contenuto degli ingredienti.
 
 ## Prerequisiti <a name = "prerequisiti"></a>
 
